@@ -1979,17 +1979,18 @@ function nativeAsk(messages, image, mime){
 }
 // Versión web pública (GitHub Pages, sin Claude ni APK): IA básica gratis desde el navegador
 const STANDALONE = !window.claude && !window.AndroidBridge;
+const mdClean = s => String(s).replace(/\*\*(.+?)\*\*/g, "$1").replace(/^#{1,6}\s*/gm, "").replace(/^\s*[-*]\s+/gm, "• ");
 async function webAsk(messages){
   const sys = "Responde en español de Chile, claro y breve.";
   const msgs = [{role:"system", content:sys}, ...messages.map(m=>({role:m.role, content:String(m.content)}))];
   const withTimeout = (p, ms) => Promise.race([p, new Promise((_,r)=>setTimeout(()=>r(new Error("timeout")), ms))]);
   try{
     const r = await withTimeout(fetch("https://api.llm7.io/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer unused"},body:JSON.stringify({model:"default",messages:msgs})}), 30000);
-    if (r.ok){ const d=await r.json(); const t=d && d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content; if (t && t.trim()) return t.trim(); }
+    if (r.ok){ const d=await r.json(); const t=d && d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content; if (t && t.trim()) return mdClean(t.trim()); }
   }catch{}
   try{
     const r = await withTimeout(fetch("https://text.pollinations.ai/",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai",messages:msgs})}), 45000);
-    if (r.ok){ const t=(await r.text()).trim(); if (t && !/^\s*\{\s*"(status|error)"/.test(t)) return t; }
+    if (r.ok){ const t=(await r.text()).trim(); if (t && !/^\s*\{\s*"(status|error)"/.test(t)) return mdClean(t); }
     if (r.status===402 || r.status===429) throw {code:"native", message:"La IA gratis está ocupada. Espera un minuto y vuelve a preguntar, o revisa el Centro de ayuda (toca el logo)."};
   }catch(e){ if (e && e.code) throw e; }
   throw {code:"native", message:"No pude conectar con la IA gratis. Revisa tu internet e intenta de nuevo, o busca tu duda en el Centro de ayuda (toca el logo)."};
