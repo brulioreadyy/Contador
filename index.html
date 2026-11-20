@@ -955,7 +955,7 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     <button type="button" data-dhelp="seg"><i class="ic" data-i="shield"></i>Política de seguridad</button>
     <button type="button" data-dgo="legal"><i class="ic" data-i="receipt"></i>Términos y privacidad</button>
   </nav>
-  <p class="small muted dver"><span id="verTxt">Contador de Bolsillo · versión 9.1</span><br><button type="button" id="updCheckBtn" class="apk-only" hidden>Buscar actualización</button></p>
+  <p class="small muted dver"><span id="verTxt">Contador de Bolsillo · versión 9.2</span><br><button type="button" id="updCheckBtn" class="apk-only" hidden>Buscar actualización</button></p>
 </aside>
 <div id="movSheet" class="welcome" hidden style="place-items:end center;background:color-mix(in srgb,var(--ink) 40%,transparent)">
   <div class="panel" style="width:100%;max-width:520px;box-shadow:var(--shadow)">
@@ -2016,7 +2016,7 @@ async function webAsk(messages){
 const aiOn = () => !!sample || nativeAI() || STANDALONE;
 // ---------- Plan: 30 días de prueba gratis y suscripción con Mercado Pago ----------
 // precio: monto mensual en pesos para mostrarlo en la app (0 = no se muestra)
-const PLAN = {dias:30, precio:0, link:"https://mpago.la/1dkyEa5"};
+const PLAN = {dias:30, precio:4990, link:"https://mpago.la/1dkyEa5"};
 function planInfo(){
   let P={}; try{ P=JSON.parse(localStorage.getItem(LS_KEY+"-plan")||"{}"); }catch{}
   if (!P.primera){ P.primera=ymd(today); try{ localStorage.setItem(LS_KEY+"-plan", JSON.stringify(P)); }catch{} }
