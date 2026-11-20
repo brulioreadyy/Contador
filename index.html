@@ -386,6 +386,11 @@ section.sheet>*{max-width:720px;margin-inline:auto}
 .upd #updNotes{white-space:pre-line}
 .upd .dbar{background:var(--surface);height:6px;margin:0}
 .dver button{border:0;background:none;color:var(--accent-text);font:inherit;font-weight:700;cursor:pointer;padding:6px}
+.upd.plan{background:var(--surface);border-color:var(--line)}
+.upd.plan .av{background:var(--copper-soft);color:var(--copper)}
+.dplan{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;border:1px dashed color-mix(in srgb,var(--accent) 45%,transparent);background:var(--accent-soft);color:var(--ink);border-radius:var(--r-s);padding:10px 12px;text-align:left;cursor:pointer}
+.dplan b{display:block;font-size:.92rem}.dplan small{display:block;color:var(--muted);font-size:.78rem}
+.dplan .ic{color:var(--accent-text)}
 /* Ajustes finos v8.1 */
 .btn.ghost{border-color:transparent;background:transparent;padding:4px 6px;font-size:.8rem}
 .mov{align-items:start}
@@ -418,6 +423,10 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     </div>
     <span class="pill" id="storePill">Cargando…</span>
     <input type="month" id="monthSel" class="sr" tabindex="-1" aria-hidden="true">
+  </div>
+  <div class="upd plan" id="planBanner" hidden>
+    <div class="upd-top"><span class="av"><i class="ic" data-i="star"></i></span><div style="min-width:0;flex:1"><b id="planBTitle">Prueba gratis</b><small id="planBSub"></small></div></div>
+    <div class="row"><button class="btn primary sm" type="button" data-pagar><i class="ic" data-i="card"></i>Suscribirme</button></div>
   </div>
   <div class="upd" id="webBanner" hidden>
     <div class="upd-top"><span class="av"><i class="ic" data-i="download"></i></span><div style="min-width:0;flex:1"><b>Descarga la app</b><small></small></div><button class="iconbtn" type="button" aria-label="Cerrar aviso" style="width:34px;height:34px"><i class="ic" data-i="x"></i></button></div>
@@ -847,6 +856,13 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     <div class="panel web-only"><h3 class="ht"><i class="ic" data-i="sparkles"></i>Asistente</h3><p class="small muted">Pregunta en simple y responde con tus números, sin configurar nada.</p><div class="row"><button class="btn primary" type="button" data-go="ia">Abrir asistente</button></div></div>
     </div>
     <div class="page" data-p="3">
+    <div class="panel" id="planPanel">
+      <div class="spread"><h2 class="ht"><i class="ic" data-i="star"></i>Tu plan</h2><span class="pill good" id="planState">Prueba gratis</span></div>
+      <p style="font-weight:700" id="planTitle">Prueba gratis</p>
+      <p class="small muted" id="planSub"></p>
+      <ul class="small" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Todas las funciones: SII automático, F29, renta, patente, calendario y asistente.</li><li>Pagas con tarjeta o transferencia en Mercado Pago. Guarda tu comprobante.</li></ul>
+      <div class="row"><button class="btn primary" type="button" data-pagar><i class="ic" data-i="card"></i>Suscribirme con Mercado Pago</button></div>
+    </div>
     <div class="panel apk-only" hidden>
       <h2 class="ht"><i class="ic" data-i="lock"></i>Seguridad</h2>
       <label class="check" for="lockOn"><input type="checkbox" id="lockOn"> Pedir huella o bloqueo de pantalla al abrir la app</label>
@@ -914,6 +930,7 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     <span style="min-width:0;display:grid"><b id="dName">Mi pyme</b><small id="dRut" class="muted">Toca para cambiar de empresa</small></span>
     <span class="chev"><i class="ic" data-i="chevdown"></i></span>
   </button>
+  <button class="dplan" type="button" data-pagar><span><b id="dPlanTxt">Prueba gratis</b><small>Toca para suscribirte con Mercado Pago</small></span><i class="ic" data-i="card"></i></button>
   <nav class="dnav">
     <p class="dsec">Tu negocio</p>
     <button type="button" data-dgo="resumen" data-dpage="0"><i class="ic" data-i="home"></i>Resumen</button>
@@ -938,7 +955,7 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     <button type="button" data-dhelp="seg"><i class="ic" data-i="shield"></i>Política de seguridad</button>
     <button type="button" data-dgo="legal"><i class="ic" data-i="receipt"></i>Términos y privacidad</button>
   </nav>
-  <p class="small muted dver"><span id="verTxt">Contador de Bolsillo · versión 9.0</span><br><button type="button" id="updCheckBtn" class="apk-only" hidden>Buscar actualización</button></p>
+  <p class="small muted dver"><span id="verTxt">Contador de Bolsillo · versión 9.1</span><br><button type="button" id="updCheckBtn" class="apk-only" hidden>Buscar actualización</button></p>
 </aside>
 <div id="movSheet" class="welcome" hidden style="place-items:end center;background:color-mix(in srgb,var(--ink) 40%,transparent)">
   <div class="panel" style="width:100%;max-width:520px;box-shadow:var(--shadow)">
@@ -1081,6 +1098,7 @@ const ICONS = {
   chevdown:'<path d="M6 9l6 6 6-6"/>',
   menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
   right:'<path d="M9 5l7 7-7 7"/>',
+  star:'<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   x:'<path d="M6 6l12 12M18 6 6 18"/>',
@@ -1334,7 +1352,7 @@ function render(){
   renderCompanies();
   $("#monthSel").value = S.month;
   const ml = monthName(S.month); $("#monthLabel").textContent = ml.charAt(0).toUpperCase()+ml.slice(1);
-  renderResumen(); renderUpcoming(); renderHomeMovs(); renderMovs(); renderF29(); renderRenta(); renderFijos(); renderCalendario(); renderAtajos(); renderEmpresa(); renderPatente(); renderCfg(); renderApk(); renderDock(); pushSummary();
+  renderResumen(); renderUpcoming(); renderHomeMovs(); renderMovs(); renderF29(); renderRenta(); renderFijos(); renderCalendario(); renderAtajos(); renderPlan(); renderEmpresa(); renderPatente(); renderCfg(); renderApk(); renderDock(); pushSummary();
   hydrateIcons();
 }
 function renderResumen(){
@@ -1441,7 +1459,7 @@ const FAQ_CATS = [["todo","Todas"],["inicio","Empezar"],["sii","Sincronizar"],["
 const FAQ = [
   {c:"inicio", q:"¿Qué es Contador de Bolsillo?", a:"Una app que trae tus ventas y compras del SII, calcula tus impuestos del mes (F29) y del año (Renta), te avisa los vencimientos y te guía paso a paso. Es un apoyo: siempre compara con la propuesta del SII antes de declarar."},
   {c:"inicio", q:"¿La app es del SII?", a:"No. La app no pertenece al Servicio de Impuestos Internos. Sólo abre sii.cl, como un navegador, para que descargues tus propios datos."},
-  {c:"inicio", q:"¿Cuánto cuesta?", a:"Es gratis. La IA básica también es gratis (con un límite de uso). Si quieres respuestas más completas puedes pegar tu propia clave de IA en Cuenta → IA."},
+  {c:"inicio", q:"¿Cuánto cuesta?", a:"Tienes 30 días de prueba gratis con todas las funciones. Después sigues con una suscripción mensual que se paga con Mercado Pago (tarjeta o transferencia) desde el botón Suscribirme, en Cuenta → Más o en el menú. Tus datos no se borran cuando termina la prueba."},
   {c:"inicio", q:"¿Cómo conecto mi cuenta del SII?", a:"En Cuenta → SII escribe tu RUT y tu clave tributaria y toca Guardar. Después toca Sincronizar en la barra de abajo. La app entra a sii.cl, descarga tus compras y ventas y las importa sola.", go:["ajustes","Ir a Cuenta → SII",1]},
   {c:"inicio", q:"¿Qué clave uso: clave tributaria o Clave Única?", a:"La clave tributaria del SII. Si sólo tienes Clave Única, entra una vez a sii.cl con ella y crea tu clave tributaria en \"Mi SII\". Si es una empresa, usa el RUT y la clave de la empresa (o la tuya si eres representante y la empresa aparece en tu Mi SII)."},
   {c:"inicio", q:"Tengo más de una empresa, ¿se puede?", a:"Sí. Al sincronizar, la app trae todas las empresas que aparecen en tu cuenta del SII con su RUT y nombre, y separa los datos de cada una. Cambia de empresa tocando el nombre arriba.", go:["empresas","Ver mis empresas"]},
@@ -1959,6 +1977,7 @@ function context(){
   const meses = Object.keys(S.months).sort().slice(-6).map(kk=>{const c=f29(kk);return `${kk}: ventas ${c.ventasTotal}, compras ${c.comprasTotal}, IVA a pagar ${c.ivaPagar}, PPM ${c.ppm}, F29 total ${c.total}`;}).join("\n");
   const rub = RUBROS[S.config.rubro] || "";
   return `Eres el contador de bolsillo de una pyme o emprendedor chileno${rub?` del rubro ${rub.toLowerCase()}`:""}. Responde en español de Chile, claro y breve (máximo ~180 palabras salvo que pidan detalle), con números en pesos chilenos. Usa los datos de abajo; si falta información dilo y explica cómo conseguirla en sii.cl. No inventes normas. Para decisiones importantes recomienda revisarlo en sii.cl o en la propuesta del SII. Nunca pidas la clave tributaria.
+Conceptos (no los confundas): el F29 es la declaración y pago MENSUAL de IVA, PPM y retenciones (no es la renta); el F22 es la declaración ANUAL de renta, en abril; el PPM es un adelanto mensual del impuesto a la renta; el remanente es IVA de compras que sobra y pasa al mes siguiente; sólo las compras con factura dan crédito de IVA. Si no sabes algo, dilo y sugiere revisarlo en sii.cl; nunca inventes cifras, plazos ni normas.
 Reglas vigentes que usa la app (Chile 2026): IVA 19%; retención honorarios 15,25% en 2026, 16% en 2027 y 17% desde 2028; Impuesto Primera Categoría Pro Pyme General 12,5% (transitorio 2025-2027), Semi Integrado 27%, Pro Pyme Transparente exento a nivel empresa (dueños tributan en global complementario); F29 vence el día 20 del mes siguiente si se declara por internet y se emiten documentos electrónicos (12 en otros casos; hasta el 28 si la declaración es sin pago); cotizaciones Previred el día 13; DJ de sueldos y honorarios en marzo; renta (F22) en abril.
 Régimen configurado: ${(REG[S.config.regimen]||REG.nose).name}${S.config.regimen==="nose"?" (el usuario no lo sabe aún)":""}. Tasa PPM: ${S.config.ppm}%.
 Mes seleccionado ${k}: ventas totales ${f.ventasTotal}, ventas netas ${f.ingresosNetos}, IVA débito ${f.debito}, IVA crédito ${f.credito}, remanente anterior ${f.rem}, IVA a pagar ${f.ivaPagar}, PPM ${f.ppm}, retención honorarios ${f.ret}, total F29 ${f.total}, costos ${f.costos}.
@@ -1979,7 +1998,6 @@ function nativeAsk(messages, image, mime){
 }
 // Versión web pública (GitHub Pages, sin Claude ni APK): IA básica gratis desde el navegador
 const STANDALONE = !window.claude && !window.AndroidBridge;
-const mdClean = s => String(s).replace(/\*\*(.+?)\*\*/g, "$1").replace(/^#{1,6}\s*/gm, "").replace(/^\s*[-*]\s+/gm, "• ");
 async function webAsk(messages){
   const sys = "Responde en español de Chile, claro y breve.";
   const msgs = [{role:"system", content:sys}, ...messages.map(m=>({role:m.role, content:String(m.content)}))];
@@ -1996,8 +2014,63 @@ async function webAsk(messages){
   throw {code:"native", message:"No pude conectar con la IA gratis. Revisa tu internet e intenta de nuevo, o busca tu duda en el Centro de ayuda (toca el logo)."};
 }
 const aiOn = () => !!sample || nativeAI() || STANDALONE;
+// ---------- Plan: 30 días de prueba gratis y suscripción con Mercado Pago ----------
+// precio: monto mensual en pesos para mostrarlo en la app (0 = no se muestra)
+const PLAN = {dias:30, precio:0, link:"https://mpago.la/1dkyEa5"};
+function planInfo(){
+  let P={}; try{ P=JSON.parse(localStorage.getItem(LS_KEY+"-plan")||"{}"); }catch{}
+  if (!P.primera){ P.primera=ymd(today); try{ localStorage.setItem(LS_KEY+"-plan", JSON.stringify(P)); }catch{} }
+  const [y,m,d]=P.primera.split("-").map(Number); const fin=new Date(y,m-1,d+PLAN.dias);
+  const dias=Math.ceil((fin-new Date(ymd(today)))/86400000);
+  return {dias:Math.max(0,dias), vencido:dias<=0, fin, P};
+}
+function openPago(){
+  const b=AB();
+  if (b && typeof b.openUrl==="function") b.openUrl(PLAN.link); else window.open(PLAN.link, "_blank", "noopener");
+}
+function renderPlan(){
+  const p=planInfo(), precio=clp(PLAN.precio);
+  const estado = p.vencido ? "Tu prueba gratis terminó" : `Prueba gratis: ${p.dias===1?"queda 1 día":`quedan ${p.dias} días`}`;
+  const sub = p.vencido ? `Suscríbete${PLAN.precio?` por ${precio} al mes`:""} con Mercado Pago para seguir con todas las funciones. Tus datos siguen guardados.` : `Termina el ${fmtDay(p.fin)}. Después sigues con la suscripción mensual${PLAN.precio?` de ${precio}`:""}.`;
+  const pb=$("#planBanner");
+  if (pb){ pb.hidden = !(p.vencido || p.dias<=7); $("#planBTitle").textContent=estado; $("#planBSub").textContent=sub; }
+  if ($("#dPlanTxt")) $("#dPlanTxt").textContent = estado;
+  if ($("#planState")){ $("#planState").textContent = p.vencido?"Prueba terminada":"Prueba gratis"; $("#planState").className="pill "+(p.vencido?"warn":"good"); $("#planTitle").textContent=estado; $("#planSub").textContent=sub; }
+}
+// ---------- Respuestas confiables antes de la IA ----------
+// La IA gratis es un modelo chico y a veces inventa. Por eso, cuando la pregunta es sobre tus números
+// (F29 del mes, renta) o calza con el Centro de ayuda, responde la app con sus propios datos.
+const STOP = new Set("que como cual cuál cuales para por con sin una uno unos unas los las del de la el en es mi mis me tu tus su sus lo le les se si ya hay qué cómo cuándo dónde este esta esto eso son ser hace hacer tengo tiene puedo debo".split(" "));
+const toks = s => norm(s).split(" ").filter(w=>w.length>2 && !STOP.has(w));
+function faqTop(q, n){
+  const qt = toks(q); if (!qt.length) return [];
+  return FAQ.map(f=>{ const tq=new Set(toks(f.q)), ta=new Set(toks(f.a)); let s=0; for (const w of qt){ if (tq.has(w)) s+=2; else if (ta.has(w)) s+=1; } return {f, s:s/Math.max(3,qt.length)}; })
+    .filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,n||3);
+}
+function localAnswer(q){
+  const t = norm(q);
+  const mine = /\b(cuanto|cuanta|mi|mis|me sale|tengo que pagar|debo pagar|calcula)\b/.test(t);
+  if (mine && /\b(f29|iva|impuesto|impuestos|pagar)\b/.test(t) && !/\brenta\b/.test(t)){
+    const k=S.month, f=f29(k), due=dueDate(k), m=monthName(k);
+    if (!(S.months[k]||[]).length) return `Todavía no hay movimientos en ${m}. Sincroniza con el SII o agrégalos en Movimientos y te digo cuánto sale tu F29.`;
+    return `Tu F29 de ${m}: ${clp(f.total)} a pagar, vence el ${fmtDay(due)}.\n\n• IVA: ${clp(f.ivaPagar)} = IVA de tus ventas ${clp(f.debito)} − IVA de compras con factura ${clp(f.credito)}${f.rem?` − remanente del mes anterior ${clp(f.rem)}`:""}.\n• PPM (adelanto de la renta): ${clp(f.ppm)}, el ${String(S.config.ppm).replace(".",",")}% de tus ventas netas ${clp(f.ingresosNetos)}.${f.ret?`\n• Retención de honorarios: ${clp(f.ret)}.`:""}${f.remSig?`\n\nTe queda ${clp(f.remSig)} de crédito de IVA para el próximo mes.`:""}\n\nEs un cálculo con tus datos: compáralo con la propuesta del F29 en sii.cl antes de declarar.`;
+  }
+  if (mine && /\b(renta|f22|abril|devolucion)\b/.test(t)){
+    const y=S.month.slice(0,4), yc=yearCalc(y), pc=personalCalc(y), tot=yc.saldo+(pc.any?pc.saldo:0);
+    return `Renta de abril ${Number(y)+1} (por lo ganado en ${y}), estimación con tus datos:\n\n• Empresa: utilidad ${clp(yc.util)}, impuesto ${clp(yc.idpc)} − PPM pagados ${clp(yc.ppm)} = ${yc.saldo<0?"devolución de "+clp(-yc.saldo):clp(yc.saldo)+" a pagar"}.${pc.any?`\n• Tú como persona: ${pc.saldo<0?"devolución de "+clp(-pc.saldo):clp(pc.saldo)+" a pagar"}.`:"\n• Si tienes sueldo, honorarios o arriendos, agrégalos en Renta → Ver detalle y guía."}\n\nTotal: ${tot<0?"te devolverían "+clp(-tot):"pagarías "+clp(tot)}. Tienes datos de ${yc.meses} de 12 meses; mientras falten meses, la cifra sale más baja de lo real.`;
+  }
+  if (!mine){
+    const top = faqTop(q,2);
+    if (top.length && top[0].s>=1 && (!top[1] || top[0].s>top[1].s)) return `${top[0].f.q}\n${top[0].f.a}\n\n(Del Centro de ayuda. Si buscabas otra cosa, pregúntalo con más detalle.)`;
+  }
+  return "";
+}
+const mdClean = s => String(s).replace(/\*\*(.+?)\*\*/g, "$1").replace(/^#{1,6}\s*/gm, "").replace(/^\s*[-*]\s+/gm, "• ");
 async function ask(q){
-  if (!aiOn() || !q.trim()) return;
+  if (!q.trim()) return;
+  const local = localAnswer(q);
+  if (local){ turns.push({role:"user", content:q}, {role:"assistant", content:local}); addMsg("user", q); addMsg("ai", local); return; }
+  if (!aiOn()) return;
   turns.push({role:"user", content:q});
   addMsg("user", q);
   const bubble = addMsg("ai","Pensando…");
@@ -2005,10 +2078,11 @@ async function ask(q){
   $("#askBtn").disabled=true; $("#stopBtn").hidden=!sample;
   try{
     const recent = turns.slice(-8);
-    const input = [{role:"user", content: context()}, ...(recent[0].role==="assistant"?recent.slice(1):recent)];
+    const ref = faqTop(q,3).map(x=>`- ${x.f.q} ${x.f.a}`).join("\n");
+    const input = [{role:"user", content: context() + (ref?`\nInformación verificada de la app (úsala antes que lo que creas saber):\n${ref}`:"")}, ...(recent[0].role==="assistant"?recent.slice(1):recent)];
     let text;
     if (sample) ({text} = await sample(input, {cache:false, signal:ctl.signal, onText:({text})=>{bubble.textContent=text; $("#chat").scrollTop=$("#chat").scrollHeight;}}));
-    else { text = nativeAI() ? await nativeAsk(input) : await webAsk(input); bubble.textContent = text; $("#chat").scrollTop=$("#chat").scrollHeight; }
+    else { text = mdClean(nativeAI() ? await nativeAsk(input) : await webAsk(input)); bubble.textContent = text; $("#chat").scrollTop=$("#chat").scrollHeight; }
     turns.push({role:"assistant", content:text});
   }catch(e){
     if (e && e.code==="cancelled"){ bubble.textContent = e.text || "Detenido."; }
@@ -2206,6 +2280,7 @@ function bind(){
   window.__drawerOpen = () => drawer.classList.contains("open");
   window.__closeDrawer = closeDrawer;
   $("#menuBtn").addEventListener("click", openDrawer);
+  document.addEventListener("click", e=>{ if (e.target.closest("[data-pagar]")){ e.preventDefault(); openPago(); } });
   $("#updGo").addEventListener("click", ()=>{ const b=AB(); if (!b || !b.updateInstall) return; $("#updGo").disabled=true; $("#updGo").lastChild.textContent="Descargando…"; $("#updBarWrap").hidden=false; $("#updBar").style.width="2%"; b.updateInstall(); });
   $("#updLater").addEventListener("click", ()=>{ $("#updCard").hidden=true; window.__updForce=false; if (updInfo){ try{ localStorage.setItem(LS_KEY+"-updskip", String(updInfo.code)); }catch{} } });
   $("#updCheckBtn").addEventListener("click", ()=>{ closeDrawer(); window.__updForce=true; toast("Buscando actualización…"); maybeUpdateCheck(true); });

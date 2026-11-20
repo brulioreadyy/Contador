@@ -1,7 +1,7 @@
 {
-  "code": 28,
-  "name": "9.0",
+  "code": 29,
+  "name": "9.1",
   "apk": "contador-de-bolsillo.apk",
   "mb": 0.1,
-  "notas": "• Primera versión pública para probar.\n• Diseño nuevo, renta anual, calendario tributario, centro de ayuda y actualización automática."
+  "notas": "• Asistente más confiable: responde con tus números del F29 y la renta, y con el Centro de ayuda.\n• 30 días de prueba gratis y suscripción con Mercado Pago."
 }
