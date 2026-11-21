@@ -388,6 +388,40 @@ section.sheet>*{max-width:720px;margin-inline:auto}
 .dver button{border:0;background:none;color:var(--accent-text);font:inherit;font-weight:700;cursor:pointer;padding:6px}
 .upd.plan{background:var(--surface);border-color:var(--line)}
 .upd.plan .av{background:var(--copper-soft);color:var(--copper)}
+.ppcard{display:grid;gap:10px}
+/* Planes de suscripción: mismo diseño que Silla y Mimo */
+.plantop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.plantop b{font-family:var(--f-display);font-size:1.2rem}
+.tag{font-size:.75rem;padding:4px 10px;border-radius:99px;font-weight:700;white-space:nowrap}
+.tag.prueba{background:var(--sky-soft);color:var(--sky)}
+.tag.pagado{background:var(--good-soft);color:var(--good)}
+.tag.vencido,.tag.bloqueado{background:var(--bad-soft);color:var(--bad)}
+.hint{font-size:.8rem;color:var(--muted);line-height:1.45;margin:0}
+.planes{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.pl{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:14px 12px 12px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-align:left;font:inherit;box-shadow:var(--shadow-s);transition:transform .12s,border-color .12s}
+.pl:active{transform:scale(.97)}
+.pl span{text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;font-weight:700;color:var(--muted)}
+.pl b{font-family:var(--f-display);font-size:1.32rem;line-height:1.15;font-weight:800;letter-spacing:-.02em}
+.pl small{font-size:.75rem;color:var(--muted)}
+.pl small.ah{color:var(--good);font-weight:700}
+.pl i{position:absolute;top:-9px;right:10px;font-style:normal;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;background:var(--surface);border:1px solid var(--accent);color:var(--accent-text)}
+.pl.top i{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.pl.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface));box-shadow:0 0 0 1px var(--accent),0 6px 18px color-mix(in srgb,var(--accent) 22%,transparent)}
+.pl.on span{color:var(--accent-text)}
+.btn.pagar{width:100%;padding:15px 12px;font-size:1rem;box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 30%,transparent)}
+.hint.seguro{text-align:center}
+.prow{display:flex;gap:8px}.prow .btn{flex:1}
+.linkbox{background:var(--sunk);border-radius:10px;padding:10px 12px;font-size:.82rem}
+#planBox,#bloqueoBox{display:grid;gap:12px}
+.pform{display:grid;gap:10px}
+.pop{display:grid;gap:8px}
+.bloqueo{position:fixed;inset:0;z-index:9000;background:var(--bg);overflow-y:auto;display:flex;align-items:center;justify-content:center;padding:calc(24px + env(safe-area-inset-top,0px)) max(var(--gut),16px) calc(24px + env(safe-area-inset-bottom,0px))}
+.bloqueo[hidden]{display:none}
+.bloqueo-in{max-width:420px;width:100%;text-align:center;display:grid;gap:12px}
+.bloqueo-in>.ic{width:44px;height:44px;margin:0 auto;color:var(--accent-text)}
+.bloqueo h2{font-size:1.4rem;margin:0}
+.bloqueo-in>p{color:var(--muted);line-height:1.5;margin:0}
+.bloqueo-in .panel{text-align:left}
 .dplan{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;border:1px dashed color-mix(in srgb,var(--accent) 45%,transparent);background:var(--accent-soft);color:var(--ink);border-radius:var(--r-s);padding:10px 12px;text-align:left;cursor:pointer}
 .dplan b{display:block;font-size:.92rem}.dplan small{display:block;color:var(--muted);font-size:.78rem}
 .dplan .ic{color:var(--accent-text)}
@@ -427,6 +461,10 @@ section.sheet>*{max-width:720px;margin-inline:auto}
   <div class="upd plan" id="planBanner" hidden>
     <div class="upd-top"><span class="av"><i class="ic" data-i="star"></i></span><div style="min-width:0;flex:1"><b id="planBTitle">Prueba gratis</b><small id="planBSub"></small></div></div>
     <div class="row"><button class="btn primary sm" type="button" data-pagar><i class="ic" data-i="card"></i>Suscribirme</button></div>
+  </div>
+  <div class="upd plan" id="ppBanner" hidden>
+    <div class="upd-top"><span class="av"><i class="ic" data-i="card"></i></span><div style="min-width:0;flex:1"><b id="ppBTitle">Factura por pagar</b><small id="ppBSub"></small></div></div>
+    <div class="row"><button class="btn primary sm" type="button" data-go="porpagar"><i class="ic" data-i="receipt"></i>Ver factura</button></div>
   </div>
   <div class="upd" id="webBanner" hidden>
     <div class="upd-top"><span class="av"><i class="ic" data-i="download"></i></span><div style="min-width:0;flex:1"><b>Descarga la app</b><small></small></div><button class="iconbtn" type="button" aria-label="Cerrar aviso" style="width:34px;height:34px"><i class="ic" data-i="x"></i></button></div>
@@ -763,6 +801,24 @@ section.sheet>*{max-width:720px;margin-inline:auto}
   </section>
 
   <!-- LEGAL -->
+  <div id="bloqueo" class="bloqueo" hidden role="dialog" aria-modal="true" aria-labelledby="blqT">
+    <div class="bloqueo-in"><i class="ic" data-i="lock"></i><h2 id="blqT">Contador de Bolsillo está en pausa</h2><p id="blqP">Tus movimientos y ajustes están guardados; paga tu plan para seguir usándola.</p><div class="panel" id="bloqueoBox"></div><button class="btn" type="button" data-plbackup style="width:100%"><i class="ic" data-i="download"></i>Descargar respaldo</button></div>
+  </div>
+  <!-- FACTURAS POR PAGAR -->
+  <section class="view sheet" data-view="porpagar" data-title="Facturas por pagar" hidden>
+    <div class="sheetbody">
+      <div id="ppList" style="display:grid;gap:14px"></div>
+      <p class="small muted">Las facturas llegan solas al sincronizar con el SII: las que están por aceptar y las del Registro de Compras. Toca "Copiar datos" para pegar el N° de factura, RUT y monto en tu transferencia.</p>
+    </div>
+  </section>
+  <!-- PLAN -->
+  <section class="view sheet" data-view="plan" data-title="Tu plan" hidden>
+    <div class="sheetbody">
+      <div class="panel" id="planBox"></div>
+      <p class="small muted">Puedes pagar con tarjeta de débito, crédito o saldo de Mercado Pago. Si pagas antes de que termine tu plan o tu prueba, los días se suman.</p>
+    </div>
+  </section>
+
   <section class="view sheet" data-view="legal" data-title="Términos y privacidad" hidden>
     <div class="sheetbody">
       <div class="panel">
@@ -773,7 +829,7 @@ section.sheet>*{max-width:720px;margin-inline:auto}
       <div class="panel">
         <h3 class="ht"><i class="ic" data-i="lock"></i>Tus datos</h3>
         <ul class="small" style="margin:0;padding-left:18px;display:grid;gap:6px">
-          <li>Tus movimientos y ajustes se guardan <b>sólo en tu teléfono</b>. No tenemos servidores ni cuentas.</li>
+          <li>Tus movimientos y ajustes se guardan <b>sólo en tu teléfono</b>. Nunca los subimos a un servidor.</li><li>Para tu suscripción guardamos en nuestro registro sólo tu nombre, el nombre de tu negocio, tu WhatsApp, tu correo, un código de la app y su versión. Los pagos los procesa <b>Mercado Pago</b>: nunca vemos los datos de tu tarjeta ni de tu banco.</li>
           <li>Tu RUT, clave del SII y clave de API se guardan <b>cifrados</b> con el almacén seguro de Android y sólo se envían a sii.cl o al proveedor de IA que elijas.</li>
           <li>Si usas el asistente, tu pregunta y un resumen de tus montos (sin tu RUT ni nombre) se envían al servicio de IA: la <b>IA básica gratuita</b> usa servicios públicos gratuitos (LLM7 o Pollinations) y, si pegas tu propia clave, Google o Anthropic. Cada uno tiene sus propias políticas.</li>
           <li>Puedes borrar tu RUT y clave en Cuenta, y borrar todo desinstalando la app. Haz un respaldo antes si quieres conservar tus datos.</li>
@@ -860,8 +916,8 @@ section.sheet>*{max-width:720px;margin-inline:auto}
       <div class="spread"><h2 class="ht"><i class="ic" data-i="star"></i>Tu plan</h2><span class="pill good" id="planState">Prueba gratis</span></div>
       <p style="font-weight:700" id="planTitle">Prueba gratis</p>
       <p class="small muted" id="planSub"></p>
-      <ul class="small" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Todas las funciones: SII automático, F29, renta, patente, calendario y asistente.</li><li>Pagas con tarjeta o transferencia en Mercado Pago. Guarda tu comprobante.</li></ul>
-      <div class="row"><button class="btn primary" type="button" data-pagar><i class="ic" data-i="card"></i>Suscribirme con Mercado Pago</button></div>
+      <ul class="small" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Todas las funciones: SII automático, F29, renta, patente, calendario y asistente.</li><li>Mensual $3.990 · 3 meses -5% · 6 meses -10% · Anual -15%.</li><li>Pagas con Mercado Pago y tu plan se activa solo.</li></ul>
+      <div class="row"><button class="btn primary" type="button" data-pagar><i class="ic" data-i="card"></i>Ver planes</button></div>
     </div>
     <div class="panel apk-only" hidden>
       <h2 class="ht"><i class="ic" data-i="lock"></i>Seguridad</h2>
@@ -904,17 +960,17 @@ section.sheet>*{max-width:720px;margin-inline:auto}
   <div id="htSeg" hidden>
     <p class="small muted" style="margin:0 0 4px">Política de seguridad y privacidad · Contador de Bolsillo · actualizada en noviembre de 2026.</p>
     <div class="hsec"><h3><i class="ic" data-i="lock"></i>En resumen</h3>
-      <ul><li>Tus datos viven <b>sólo en tu teléfono</b>. No tenemos servidores, cuentas ni base de datos de usuarios.</li><li>Tu RUT y clave del SII se guardan <b>cifrados</b> y sólo se usan en <b>sii.cl</b>.</li><li>La app <b>nunca paga, declara ni envía nada</b> por ti: siempre confirmas tú.</li><li>No hay publicidad ni vendemos datos.</li></ul></div>
+      <ul><li>Tus movimientos y claves viven <b>sólo en tu teléfono</b>. Para la suscripción sólo registramos tu nombre, negocio, WhatsApp y correo.</li><li>Tu RUT y clave del SII se guardan <b>cifrados</b> y sólo se usan en <b>sii.cl</b>.</li><li>La app <b>nunca paga, declara ni envía nada</b> por ti: siempre confirmas tú.</li><li>No hay publicidad ni vendemos datos.</li></ul></div>
     <div class="hsec"><h3><i class="ic" data-i="shield"></i>Qué datos guarda la app</h3>
       <ul><li>Tus movimientos (ventas, compras, gastos), ajustes de tu pyme, empresas, ficha de empresa y datos de renta que escribas.</li><li>Tu RUT y clave tributaria, sólo si los guardas para sincronizar.</li><li>Tu clave de API de IA, sólo si pegas una propia.</li></ul></div>
     <div class="hsec"><h3><i class="ic" data-i="lock"></i>Cómo los protege</h3>
       <ul><li>RUT, clave del SII y clave de API se cifran con <b>AES-GCM</b> usando el <b>almacén seguro de Android (Keystore)</b>: la llave de cifrado no sale del teléfono.</li><li>La app no permite copias de seguridad automáticas de Android, para que tus claves no se copien a otros lados.</li><li>Puedes activar el <b>bloqueo con huella</b> o el bloqueo de pantalla para abrir la app (Cuenta → Más).</li><li>Las conexiones son sólo por <b>HTTPS</b>. El navegador interno sólo escribe tu clave en páginas de <b>sii.cl</b>.</li></ul></div>
     <div class="hsec"><h3><i class="ic" data-i="send"></i>Qué se envía y a quién</h3>
-      <ul><li><b>sii.cl:</b> tu RUT y clave, para entrar y descargar tu Registro de Compras y Ventas, igual que si lo hicieras tú en el navegador.</li><li><b>Asistente de IA:</b> tu pregunta y un resumen de montos, <b>sin tu RUT, nombre ni clave</b>. La IA gratuita usa servicios públicos (LLM7 o Pollinations); con tu propia clave, Google o Anthropic. Cada uno tiene su propia política.</li><li><b>Sitios oficiales</b> (Tesorería, Previred, municipalidad, etc.) sólo se abren cuando tú tocas un botón; la app no les envía datos.</li></ul></div>
+      <ul><li><b>Suscripción:</b> tu nombre, negocio, WhatsApp, correo y un código de la app, a nuestro registro de planes (Google). El pago lo hace Mercado Pago; nosotros sólo recibimos el aviso de que se aprobó.</li><li><b>sii.cl:</b> tu RUT y clave, para entrar y descargar tu Registro de Compras y Ventas, igual que si lo hicieras tú en el navegador.</li><li><b>Asistente de IA:</b> tu pregunta y un resumen de montos, <b>sin tu RUT, nombre ni clave</b>. La IA gratuita usa servicios públicos (LLM7 o Pollinations); con tu propia clave, Google o Anthropic. Cada uno tiene su propia política.</li><li><b>Sitios oficiales</b> (Tesorería, Previred, municipalidad, etc.) sólo se abren cuando tú tocas un botón; la app no les envía datos.</li></ul></div>
     <div class="hsec"><h3><i class="ic" data-i="refresh"></i>Sincronización en segundo plano</h3>
       <p>Si activas "Sincronizar sola", al abrir la app un navegador oculto entra a sii.cl con tus datos guardados, como máximo cada 30 minutos. No resuelve verificaciones ni captchas: si el SII pide algo más, se detiene y te avisa para que entres tú.</p></div>
     <div class="hsec"><h3><i class="ic" data-i="bell"></i>Permisos de Android</h3>
-      <ul><li><b>Internet:</b> conectar con sii.cl y con la IA.</li><li><b>Notificaciones:</b> recordarte el F29, la renta y la patente.</li><li><b>Huella / biometría:</b> sólo si activas el bloqueo; la huella nunca sale del teléfono.</li><li><b>Inicio del teléfono:</b> para que los recordatorios sigan funcionando después de reiniciar.</li></ul></div>
+      <ul><li><b>Internet:</b> conectar con sii.cl, con la IA y revisar tu plan.</li><li><b>Notificaciones:</b> recordarte el F29, la renta y la patente.</li><li><b>Huella / biometría:</b> sólo si activas el bloqueo; la huella nunca sale del teléfono.</li><li><b>Inicio del teléfono:</b> para que los recordatorios sigan funcionando después de reiniciar.</li></ul></div>
     <div class="hsec"><h3><i class="ic" data-i="trash"></i>Tu control</h3>
       <ul><li>Borra tu RUT y clave cuando quieras en Cuenta → SII.</li><li>Descarga un respaldo en Cuenta → Más. Ese archivo <b>no incluye tus claves</b>; guárdalo en un lugar seguro.</li><li>Desinstalar la app borra todos tus datos del teléfono.</li></ul></div>
     <div class="hsec"><h3><i class="ic" data-i="help"></i>Recomendaciones</h3>
@@ -930,12 +986,13 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     <span style="min-width:0;display:grid"><b id="dName">Mi pyme</b><small id="dRut" class="muted">Toca para cambiar de empresa</small></span>
     <span class="chev"><i class="ic" data-i="chevdown"></i></span>
   </button>
-  <button class="dplan" type="button" data-pagar><span><b id="dPlanTxt">Prueba gratis</b><small>Toca para suscribirte con Mercado Pago</small></span><i class="ic" data-i="card"></i></button>
+  <button class="dplan" type="button" data-pagar><span><b id="dPlanTxt">Prueba gratis</b><small>Toca para ver tu plan</small></span><i class="ic" data-i="card"></i></button>
   <nav class="dnav">
     <p class="dsec">Tu negocio</p>
     <button type="button" data-dgo="resumen" data-dpage="0"><i class="ic" data-i="home"></i>Resumen</button>
     <button type="button" data-dgo="resumen" data-dpage="1"><i class="ic" data-i="list"></i>Movimientos</button>
     <button type="button" data-dgo="f29"><i class="ic" data-i="receipt"></i>Impuestos del mes</button>
+    <button type="button" data-dgo="porpagar"><i class="ic" data-i="card"></i>Facturas por pagar</button>
     <button type="button" data-dgo="resumen" data-dpage="2"><i class="ic" data-i="up"></i>Renta</button>
     <button type="button" data-dgo="empresas"><i class="ic" data-i="building"></i>Tus empresas</button>
     <button type="button" data-dgo="renta"><i class="ic" data-i="up"></i>Renta anual</button>
@@ -1102,6 +1159,7 @@ const ICONS = {
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  copy:'<path d="M9 9h10v12H9zM5 15V3h10"/>',
   card:'<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 10h18M7 15h3"/>',
   arrowin:'<path d="M17 7 7 17M7 9v8h8"/>',
   arrowout:'<path d="M7 17 17 7M9 7h8v8"/>'
@@ -1194,7 +1252,7 @@ const store = {
       const m = d.id.match(/^c_([0-9K]+)_(.*)$/); if (m){ id=m[1]; key=m[2]; }
       const D = all[id] ||= freshData();
       if (key==="config") Object.assign(D.config, v);
-      else if (key==="empresa") D.empresa = {checks:v.checks||{}, costos:v.costos||{}, paid:v.paid||{}, patente:v.patente||{}, renta:v.renta||{}, fijos:v.fijos||[], ficha:v.ficha||{}, wizard:v.wizard||{}};
+      else if (key==="empresa") D.empresa = {checks:v.checks||{}, costos:v.costos||{}, paid:v.paid||{}, patente:v.patente||{}, renta:v.renta||{}, fijos:v.fijos||[], ficha:v.ficha||{}, wizard:v.wizard||{}, porPagar:v.porPagar||{}};
       else if (key.startsWith("mes_")) D.months[key.slice(4)] = Array.isArray(v.items)?v.items.map(x=>({...x})):[];
     }
     S.companies = cos && cos.length ? cos : [{id:"principal", rut:"", nombre:all.principal.config.nombre||""}];
@@ -1235,7 +1293,7 @@ const store = {
   },
   saveMonth(k, id){ id=id||S.active; return this.save(this.pre(id)+"mes_"+k, {items:dataOf(id).months[k]||[]}); },
   saveConfig(id){ id=id||S.active; return this.save(this.pre(id)+"config", {...dataOf(id).config}); },
-  saveEmpresa(id){ id=id||S.active; const e=dataOf(id).empresa; return this.save(this.pre(id)+"empresa", {checks:e.checks, costos:e.costos, paid:e.paid||{}, patente:e.patente||{}, renta:e.renta||{}, fijos:e.fijos||[], ficha:e.ficha||{}, wizard:e.wizard||{}}); },
+  saveEmpresa(id){ id=id||S.active; const e=dataOf(id).empresa; return this.save(this.pre(id)+"empresa", {checks:e.checks, costos:e.costos, paid:e.paid||{}, patente:e.patente||{}, renta:e.renta||{}, fijos:e.fijos||[], ficha:e.ficha||{}, wizard:e.wizard||{}, porPagar:e.porPagar||{}}); },
   saveCompanies(){ return this.save("companies", {list:S.companies, active:S.active, names:S.names||{}}); }
 };
 
@@ -1352,7 +1410,7 @@ function render(){
   renderCompanies();
   $("#monthSel").value = S.month;
   const ml = monthName(S.month); $("#monthLabel").textContent = ml.charAt(0).toUpperCase()+ml.slice(1);
-  renderResumen(); renderUpcoming(); renderHomeMovs(); renderMovs(); renderF29(); renderRenta(); renderFijos(); renderCalendario(); renderAtajos(); renderPlan(); renderEmpresa(); renderPatente(); renderCfg(); renderApk(); renderDock(); pushSummary();
+  renderResumen(); renderUpcoming(); renderHomeMovs(); renderMovs(); renderF29(); renderRenta(); renderFijos(); renderCalendario(); renderAtajos(); renderPlan(); renderPorPagar(); renderEmpresa(); renderPatente(); renderCfg(); renderApk(); renderDock(); pushSummary();
   hydrateIcons();
 }
 function renderResumen(){
@@ -1459,7 +1517,7 @@ const FAQ_CATS = [["todo","Todas"],["inicio","Empezar"],["sii","Sincronizar"],["
 const FAQ = [
   {c:"inicio", q:"¿Qué es Contador de Bolsillo?", a:"Una app que trae tus ventas y compras del SII, calcula tus impuestos del mes (F29) y del año (Renta), te avisa los vencimientos y te guía paso a paso. Es un apoyo: siempre compara con la propuesta del SII antes de declarar."},
   {c:"inicio", q:"¿La app es del SII?", a:"No. La app no pertenece al Servicio de Impuestos Internos. Sólo abre sii.cl, como un navegador, para que descargues tus propios datos."},
-  {c:"inicio", q:"¿Cuánto cuesta?", a:"Tienes 30 días de prueba gratis con todas las funciones. Después sigues con una suscripción mensual que se paga con Mercado Pago (tarjeta o transferencia) desde el botón Suscribirme, en Cuenta → Más o en el menú. Tus datos no se borran cuando termina la prueba."},
+  {c:"inicio", q:"¿Cuánto cuesta?", a:"Tienes 30 días de prueba gratis con todas las funciones. Después eliges un plan: mensual $3.990, 3 meses con 5% de descuento ($11.370), 6 meses con 10% ($21.550) o anual con 15% ($40.700). Pagas con Mercado Pago desde \"Tu plan\" (en el menú o en Cuenta → Más) y se activa solo. Tus datos no se borran cuando termina la prueba."},
   {c:"inicio", q:"¿Cómo conecto mi cuenta del SII?", a:"En Cuenta → SII escribe tu RUT y tu clave tributaria y toca Guardar. Después toca Sincronizar en la barra de abajo. La app entra a sii.cl, descarga tus compras y ventas y las importa sola.", go:["ajustes","Ir a Cuenta → SII",1]},
   {c:"inicio", q:"¿Qué clave uso: clave tributaria o Clave Única?", a:"La clave tributaria del SII. Si sólo tienes Clave Única, entra una vez a sii.cl con ella y crea tu clave tributaria en \"Mi SII\". Si es una empresa, usa el RUT y la clave de la empresa (o la tuya si eres representante y la empresa aparece en tu Mi SII)."},
   {c:"inicio", q:"Tengo más de una empresa, ¿se puede?", a:"Sí. Al sincronizar, la app trae todas las empresas que aparecen en tu cuenta del SII con su RUT y nombre, y separa los datos de cada una. Cambia de empresa tocando el nombre arriba.", go:["empresas","Ver mis empresas"]},
@@ -1477,6 +1535,7 @@ const FAQ = [
   {c:"f29", q:"¿Cómo pago el F29?", a:"En la app, abre Impuestos del mes y toca \"Declarar y pagar\": te lleva al F29 en sii.cl. Revisa la propuesta, envíala y paga con tu banco (Pago en Línea). La app nunca paga por ti. Después toca \"Marcar como pagado\".", go:["f29","Ir a Impuestos del mes"]},
   {c:"f29", q:"No vendí nada este mes, ¿igual declaro?", a:"Sí, si tienes inicio de actividades en IVA. En el F29 marca \"Sin movimiento\" y envíalo; no hay nada que pagar. No declarar trae multa."},
   {c:"f29", q:"No me alcanza para pagar el F29", a:"Declara igual dentro del plazo: así evitas la multa por no declarar. La deuda la puedes pagar después en cuotas con un convenio en la Tesorería (tgr.cl): hasta 24 cuotas, desde 1 UTM de deuda. Pagar tarde suma intereses y reajuste.", go:["atajos","Ver convenio de pago"]},
+  {c:"f29", q:"¿Cómo me avisa la app de una factura que tengo que pagar?", a:"Cada vez que sincronizas con el SII, si te llegó una factura de compra (por ejemplo el arriendo), la app te avisa con una notificación y la muestra en Facturas por pagar (menú o pantalla de inicio) con su número, proveedor, RUT, fecha y monto. Paga con transferencia desde tu banco, usa \"Copiar datos\" para pegar los datos, y después toca \"Ya la pagué\".", go:["porpagar","Ver facturas por pagar"]},
   {c:"f29", q:"¿Qué son las facturas por revisar?", a:"Cuando un proveedor te emite una factura, tienes 8 días para aceptarla o reclamarla en sii.cl. Si no haces nada, queda aceptada sola. Reclama sólo si viene con errores o no corresponde. La app te avisa cuántas tienes."},
   {c:"renta", q:"¿Qué es la Renta anual (F22)?", a:"Una vez al año, en abril, se declara lo que ganaste el año anterior: el impuesto de tu empresa (descontando los PPM que pagaste) y tu impuesto como persona (Global Complementario). El SII arma una propuesta; tú la revisas y la aceptas o corriges.", go:["renta","Ver mi Renta"]},
   {c:"renta", q:"¿Cómo sé mi régimen tributario?", a:"En sii.cl → Mi SII → datos tributarios, o en tu Carpeta Tributaria. Si no elegiste otro al hacer el inicio de actividades, normalmente es Pro Pyme General. Cámbialo en Cuenta → Pyme: cambia bastante el cálculo de la renta."},
@@ -1576,6 +1635,9 @@ function renderUpcoming(){
   }
   const co = activeCo();
   if (co.pend > 0) items.unshift({ic:"receipt", cls:"warn", t:`${co.pend} factura${co.pend>1?"s":""} por revisar`, s:"Acepta o reclama en sii.cl dentro de 8 días", v:"", dot:"warn", go:"sii"});
+  { const pp = ppPendientes(); if (pp.length){ const p=pp[0];
+    items.unshift(pp.length===1 ? {ic:"card", cls:"warn", t:`Factura N° ${p.folio} por pagar`, s:`${p.who||"Proveedor"} · emitida el ${fmtDay(new Date(p.fecha+"T12:00"))}`, v:clp(p.total), dot:p.visto?"warn":"bad", go:"porpagar"}
+      : {ic:"card", cls:"warn", t:`${pp.length} facturas por pagar`, s:pp.slice(0,2).map(x=>`N° ${x.folio}${x.who?" "+x.who:""}`).join(" · "), v:clp(pp.reduce((a,x)=>a+(x.total||0),0)), dot:pp.some(x=>!x.visto)?"bad":"warn", go:"porpagar"}); } }
   const pat = [nextDate(0,31), nextDate(6,31)].sort((a,b)=>a-b)[0];
   const pt = patInfo();
   items.push({ic:pt.paid?"check":"store", cls:pt.paid?"acc":(pt.days<=30?"warn":""), t:"Patente municipal", s: pt.paid ? `${pt.label}: pagada ✓` : pt.days<0 ? `Venció el ${fmtDay(pt.due)}${pt.comuna?` · Municipalidad de ${pt.comuna}`:""}` : pt.days<=30 ? `Vence el ${fmtDay(pt.due)} · ${pt.comuna?`Municipalidad de ${pt.comuna}`:"toca para ver cómo pagar"}` : `Próximo pago: ${pt.label}`, v: pt.cuota && !pt.paid ? clp(pt.cuota) : "", dot: pt.paid?"": pt.days<0?"bad": pt.days<=30?"warn":"", go:"patente"});
@@ -2014,28 +2076,146 @@ async function webAsk(messages){
   throw {code:"native", message:"No pude conectar con la IA gratis. Revisa tu internet e intenta de nuevo, o busca tu duda en el Centro de ayuda (toca el logo)."};
 }
 const aiOn = () => !!sample || nativeAI() || STANDALONE;
-// ---------- Plan: 30 días de prueba gratis y suscripción con Mercado Pago ----------
-// precio: monto mensual en pesos para mostrarlo en la app (0 = no se muestra)
-const PLAN = {dias:30, precio:4990, link:"https://mpago.la/1dkyEa5"};
-function planInfo(){
-  let P={}; try{ P=JSON.parse(localStorage.getItem(LS_KEY+"-plan")||"{}"); }catch{}
-  if (!P.primera){ P.primera=ymd(today); try{ localStorage.setItem(LS_KEY+"-plan", JSON.stringify(P)); }catch{} }
-  const [y,m,d]=P.primera.split("-").map(Number); const fin=new Date(y,m-1,d+PLAN.dias);
-  const dias=Math.ceil((fin-new Date(ymd(today)))/86400000);
-  return {dias:Math.max(0,dias), vencido:dias<=0, fin, P};
+// ---------- Plan: 30 días gratis + suscripción (mismo sistema que Silla y Mimo) ----------
+// Licencia en el servidor (Apps Script). Los planes se pagan con Mercado Pago y se activan solos.
+const APP_V = "9.3";
+const API = "https://script.google.com/macros/s/AKfycbzVAXe-wM8xVHy9DOyh-EbtR9cfySFpLNvnYqR4-ZqMQR1GYJzkrj-Sovw02bKuq2AH/exec";
+const MENSUAL = 3990;
+const PLANES = [{m:1,precio:3990,dsc:0},{m:3,precio:11370,dsc:5},{m:6,precio:21550,dsc:10},{m:12,precio:40700,dsc:15,top:1}];
+const LKEY = LS_KEY+"-plan";
+let L = {}; try{ L=JSON.parse(localStorage.getItem(LKEY)||"{}")||{}; }catch{ L={}; }
+if (!L.id) L.id = "cb-"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+if (!L.primera) L.primera = ymd(today);
+const saveL = () => { try{ localStorage.setItem(LKEY, JSON.stringify(L)); }catch{} };
+saveL();
+let planSel = 12, verificando = false;
+const addDaysS = (s,n) => { const [y,m,d]=s.split("-").map(Number); return ymd(new Date(y,m-1,d+n)); };
+const diasA = s => { const [y,m,d]=s.split("-").map(Number); const t=new Date(today.getFullYear(),today.getMonth(),today.getDate()); return Math.round((new Date(y,m-1,d)-t)/86400000); };
+const fechaL = s => { const [y,m,d]=s.split("-").map(Number); return `${d} de ${MES[m-1]} de ${y}`; };
+const nombrePlan = m => m===1?"Mensual":m===12?"Anual":m+" meses";
+function plan(){
+  const hasta = L.hasta || addDaysS(L.primera, 30), gracia = L.gracia!=null ? +L.gracia : 5, d = diasA(hasta);
+  const estado = L.estado==="pagado" && d>=0 ? "pagado" : d>=0 ? "prueba" : d>=-gracia ? "vencido" : "bloqueado";
+  return {estado, hasta, dias:d, quedaGracia:gracia+d};
 }
-function openPago(){
-  const b=AB();
-  if (b && typeof b.openUrl==="function") b.openUrl(PLAN.link); else window.open(PLAN.link, "_blank", "noopener");
+const registrado = () => !!(L.reg && L.reg.nombre && L.reg.whatsapp);
+async function verificar(manual){
+  if (verificando) return;
+  if (!registrado()){ if (manual) openPlan(); return; }
+  verificando = true;
+  try{
+    const q = new URLSearchParams({id:L.id, nombre:L.reg.nombre||"", barberia:L.reg.negocio||S.config.nombre||"", whatsapp:L.reg.whatsapp||"", correo:L.reg.correo||"", v:APP_V});
+    const ctl = new AbortController(), t = setTimeout(()=>ctl.abort(), 12000);
+    const r = await fetch(API+"?"+q.toString(), {signal:ctl.signal}); clearTimeout(t);
+    const j = await r.json();
+    if (j && j.ok){ Object.assign(L,{estado:j.estado, hasta:j.hasta, gracia:j.gracia, revisado:Date.now()}); saveL(); renderPlan(); if (manual) toast(j.estado==="pagado"?"¡Plan activo! Gracias":"Plan revisado"); }
+    else if (manual) toast("No se pudo revisar, intenta de nuevo");
+  }catch{ if (manual) toast("Sin conexión: inténtalo con internet"); }
+  verificando = false;
 }
+async function postAPI(o){ const r = await fetch(API, {method:"POST", body:JSON.stringify(o)}); return r.json(); }
+function avisarPago(pl){ try{ fetch(API+"?"+new URLSearchParams({accion:"aviso", id:L.id, m:pl.m, monto:pl.precio, barberia:(L.reg&&L.reg.negocio)||"", nombre:(L.reg&&L.reg.nombre)||""}).toString()).catch(()=>{}); }catch{} }
+function abrirLink(url){ const b=AB(); if (b && typeof b.openUrl==="function") b.openUrl(url); else location.href = url; }
+async function pagarPlan(m){
+  if (!registrado()){ toast("Primero completa tus datos"); return; }
+  if (!navigator.onLine){ toast("Necesitas internet para pagar"); return; }
+  const pl = PLANES.find(x=>x.m===m); toast("Abriendo Mercado Pago…");
+  try{
+    let j = await postAPI({accion:"checkout", id:L.id, meses:m});
+    if (j.error==="sin-registro"){ await verificar(false); j = await postAPI({accion:"checkout", id:L.id, meses:m}); }
+    if (j.ok && j.url){ L.pagoPend = Date.now(); saveL(); abrirLink(j.url); return; }
+  }catch{}
+  avisarPago(pl); toast("No se pudo abrir el pago, intenta de nuevo en un rato");
+}
+async function enviarPago(){
+  const op = (($("#pgOp")||{}).value||"").replace(/\D/g,"");
+  if (op.length<6){ toast("Revisa el número de operación"); return; }
+  toast("Revisando tu pago…");
+  try{
+    const j = await postAPI({accion:"pago", id:L.id, op});
+    if (j.ok && j.estado==="pagado"){ L.estado="pagado"; L.hasta=j.hasta; saveL(); renderPlan(); toast("¡Pago recibido! Plan activo"); }
+    else if (j.ok && j.pendiente){ toast("Recibimos tu aviso. Activamos tu plan apenas lo revisemos"); }
+    else toast({usada:"Ese número de operación ya se usó","no-aprobado":"Ese pago todavía no está aprobado","no-encontrado":"No encontramos ese pago, revisa el número",monto:"El monto no alcanza para el plan",antiguo:"Ese pago es muy antiguo","sin-registro":"Completa tus datos primero"}[j.error]||"No se pudo revisar, intenta de nuevo");
+  }catch{ toast("Sin conexión, intenta de nuevo"); }
+}
+function revisarRetornoPago(){
+  const qs = new URLSearchParams(location.search), q = qs.get("pago"); if (!q) return;
+  try{ history.replaceState(null,"",location.pathname); }catch{}
+  const ref = (qs.get("external_reference")||"").split("|")[0];
+  if (ref && ref!==L.id){ toast(q==="error"?"El pago no se completó":"¡Pago recibido! Vuelve a la app Contador de Bolsillo: tu plan se activa solo"); return; }
+  if (q==="error"){ toast("El pago no se completó. Puedes intentarlo de nuevo"); return; }
+  toast(q==="ok"?"¡Pago recibido! Activando tu plan…":"Tu pago está en revisión, te avisamos al activarse");
+  sondearPago();
+}
+function sondearPago(){
+  let n=0; clearInterval(sondearPago._t);
+  sondearPago._t = setInterval(async()=>{ n++; try{ await verificar(false); }catch{} if (plan().estado==="pagado" || n>8){ clearInterval(sondearPago._t); renderPlan(); if (plan().estado==="pagado") toast("¡Plan activo! Gracias por confiar en Contador de Bolsillo"); } }, 5000);
+}
+function planHTML(){
+  const p = plan();
+  const txt = {prueba:"Prueba gratis", pagado:"Plan activo", vencido:"Vencido", bloqueado:"Pausado"}[p.estado];
+  const tag = p.estado==="pagado" ? "Activo" : p.estado==="prueba" ? p.dias+" día"+(p.dias===1?"":"s") : "Pagar";
+  const sub = p.estado==="pagado" ? `Pagado hasta el ${fechaL(p.hasta)}.` : p.estado==="prueba" ? `Gratis hasta el ${fechaL(p.hasta)}. Si pagas antes, tus días se suman después.` : `Venció el ${fechaL(p.hasta)}.${p.estado==="vencido"?` Tienes ${p.quedaGracia} día${p.quedaGracia===1?"":"s"} antes de que la app se pause.`:""}`;
+  const h = `<div class="plantop"><b>${txt}</b><span class="tag ${p.estado}">${tag}</span></div><p class="hint">${sub}</p>`;
+  if (!registrado()){
+    const r = L.reg||{};
+    return h + `<form id="fReg" class="pform"><p class="small" style="margin:0">${p.estado==="prueba"?"Completa tus datos para empezar tu <b>prueba gratis de 30 días</b>.":"Completa tus datos para activar tu plan."}</p>
+      <label>Tu nombre<input name="nombre" required autocomplete="name" value="${esc(r.nombre||"")}" placeholder="Ej: Camila"></label>
+      <label>Nombre de tu negocio<input name="negocio" required value="${esc(r.negocio||S.config.nombre||"")}" placeholder="Ej: Algodones Dulces"></label>
+      <label>Tu WhatsApp<input name="whatsapp" type="tel" inputmode="tel" required autocomplete="tel" value="${esc(r.whatsapp||"")}" placeholder="9 1234 5678"></label>
+      <label>Tu correo<input name="correo" type="email" inputmode="email" autocomplete="email" value="${esc(r.correo||"")}" placeholder="tucorreo@gmail.com"></label>
+      <button class="btn primary" type="submit">Empezar</button>
+      <p class="hint">Los usamos sólo para tu suscripción y para ayudarte si tienes un problema con el pago.</p></form>`;
+  }
+  if (!PLANES.some(x=>x.m===planSel)) planSel = 12;
+  const sel = PLANES.find(x=>x.m===planSel);
+  return h + `<div class="planes">${PLANES.map(x=>`<button type="button" class="pl${x.m===planSel?" on":""}${x.top?" top":""}" data-plsel="${x.m}" aria-pressed="${x.m===planSel}">${x.top?"<i>Mejor precio</i>":x.dsc?`<i class="d">-${x.dsc}%</i>`:""}<span>${nombrePlan(x.m)}</span><b>${clp(x.precio)}</b><small>${x.m>1?clp(Math.round(x.precio/x.m))+" al mes":"cada mes"}</small>${x.m>1?`<small class="ah">Ahorras ${clp(MENSUAL*x.m-x.precio)}</small>`:""}</button>`).join("")}</div>
+    <button class="btn primary pagar" type="button" data-plpay="${sel.m}">${icon("star")}Suscribirme · ${clp(sel.precio)}</button>
+    <p class="hint seguro">🔒 Pago seguro con Mercado Pago · tu plan se activa solo</p>
+    <div class="prow"><button class="btn sm" type="button" data-plop>Ya pagué y no se activó</button><button class="btn sm" type="button" data-plcheck>${icon("refresh")}Revisar mi plan</button></div>
+    <div class="pop" hidden><label>N° de operación de Mercado Pago<input id="pgOp" inputmode="numeric" placeholder="Ej: 123456789012"></label><p class="hint">Lo encuentras en el comprobante que te llegó al correo o en tu actividad de Mercado Pago.</p><button class="btn primary sm" type="button" data-plsend>Revisar pago</button></div>
+    <p class="hint">Tu ID: ${esc(L.id)}</p>`;
+}
+function pintarPlanBox(el){ if (!el) return; el.innerHTML = planHTML(); hydrateIcons(el); }
+function openPlan(){ pintarPlanBox($("#planBox")); show("plan"); if (registrado() && !L.revisado) verificar(false); }
 function renderPlan(){
-  const p=planInfo(), precio=clp(PLAN.precio);
-  const estado = p.vencido ? "Tu prueba gratis terminó" : `Prueba gratis: ${p.dias===1?"queda 1 día":`quedan ${p.dias} días`}`;
-  const sub = p.vencido ? `Suscríbete${PLAN.precio?` por ${precio} al mes`:""} con Mercado Pago para seguir con todas las funciones. Tus datos siguen guardados.` : `Termina el ${fmtDay(p.fin)}. Después sigues con la suscripción mensual${PLAN.precio?` de ${precio}`:""}.`;
-  const pb=$("#planBanner");
-  if (pb){ pb.hidden = !(p.vencido || p.dias<=7); $("#planBTitle").textContent=estado; $("#planBSub").textContent=sub; }
+  const p = plan();
+  const estado = p.estado==="pagado" ? `Plan activo hasta el ${fechaL(p.hasta)}` : p.estado==="prueba" ? `Prueba gratis: ${p.dias===1?"queda 1 día":`quedan ${p.dias} días`}` : p.estado==="vencido" ? "Tu plan venció" : "App en pausa";
+  const sub = p.estado==="pagado" ? "Gracias por tu suscripción." : p.estado==="prueba" ? `Después: desde ${clp(Math.round(40700/12))} al mes con el plan anual.` : "Elige un plan para seguir usando todas las funciones. Tus datos siguen guardados.";
+  const pb = $("#planBanner");
+  if (pb){ pb.hidden = !(p.estado==="vencido" || (p.estado==="prueba" && p.dias<=7)); $("#planBTitle").textContent=estado; $("#planBSub").textContent=sub; }
   if ($("#dPlanTxt")) $("#dPlanTxt").textContent = estado;
-  if ($("#planState")){ $("#planState").textContent = p.vencido?"Prueba terminada":"Prueba gratis"; $("#planState").className="pill "+(p.vencido?"warn":"good"); $("#planTitle").textContent=estado; $("#planSub").textContent=sub; }
+  if ($("#planState")){ $("#planState").textContent = {prueba:"Prueba gratis",pagado:"Activo",vencido:"Vencido",bloqueado:"En pausa"}[p.estado]; $("#planState").className = "pill "+(p.estado==="pagado"||p.estado==="prueba"?"good":"warn"); $("#planTitle").textContent=estado; $("#planSub").textContent=sub; }
+  const sv = $('section.sheet[data-view="plan"]'); if (sv && !sv.hidden && !sv.contains(document.activeElement)) pintarPlanBox($("#planBox"));
+  const bl = $("#bloqueo");
+  if (bl){ if (p.estado==="bloqueado"){ if (bl.hidden || !bl.contains(document.activeElement)){ pintarPlanBox($("#bloqueoBox")); $("#blqP").textContent=`Tu plan venció el ${fechaL(p.hasta)}. Tus movimientos y ajustes están guardados; paga tu plan para seguir usándola.`; } bl.hidden=false; hydrateIcons(bl); } else bl.hidden=true; }
+}
+function bindPlan(){
+  document.addEventListener("click", e=>{
+    if (e.target.closest("[data-plbackup]")){ const bb=$("#backupBtn"); if (bb) bb.click(); return; }
+    const t = e.target.closest("[data-pagar],[data-plsel],[data-plpay],[data-plop],[data-plcheck],[data-plsend]"); if (!t) return;
+    const box = t.closest("#planBox,#bloqueoBox");
+    if (t.hasAttribute("data-pagar")){ e.preventDefault(); if (window.__drawerOpen && window.__drawerOpen()) window.__closeDrawer(); openPlan(); return; }
+    if (t.dataset.plsel){ planSel = +t.dataset.plsel; pintarPlanBox(box); return; }
+    if (t.dataset.plpay){ pagarPlan(+t.dataset.plpay); return; }
+    if (t.hasAttribute("data-plop")){ const pp = box && box.querySelector(".pop"); if (pp){ pp.hidden = !pp.hidden; if (!pp.hidden) pp.querySelector("input").focus(); } return; }
+    if (t.hasAttribute("data-plcheck")){ verificar(true); return; }
+    if (t.hasAttribute("data-plsend")){ enviarPago(); return; }
+  });
+  document.addEventListener("submit", e=>{
+    if (e.target.id!=="fReg") return; e.preventDefault();
+    const f = new FormData(e.target), g = k => String(f.get(k)||"").trim().slice(0,80);
+    if (g("whatsapp").replace(/\D/g,"").length<8){ toast("Revisa tu WhatsApp"); return; }
+    L.reg = {nombre:g("nombre"), negocio:g("negocio"), whatsapp:g("whatsapp"), correo:g("correo")}; saveL();
+    pintarPlanBox(e.target.closest("#planBox,#bloqueoBox")); verificar(false);
+  });
+  document.addEventListener("visibilitychange", ()=>{ if (document.visibilityState==="visible" && L.pagoPend && Date.now()-L.pagoPend < 2*3600e3 && plan().estado!=="pagado") sondearPago(); });
+  revisarRetornoPago();
+  // Igual que Silla y Mimo: al empezar pide tus datos una vez para activar la prueba gratis
+  setTimeout(()=>{ let w=""; try{ w=localStorage.getItem(LS_KEY+"-welcome")||""; }catch{}
+    if (!registrado() && !L.pidio && w && $("#welcome").hidden && !sheetStack.length && !bgMode){ L.pidio=1; saveL(); openPlan(); } }, 4000);
+  // Revisa el plan al abrir (máximo cada 6 horas)
+  if (registrado() && (!L.revisado || Date.now()-L.revisado > 6*3600e3)) setTimeout(()=>verificar(false), 2500);
 }
 // ---------- Respuestas confiables antes de la IA ----------
 // La IA gratis es un modelo chico y a veces inventa. Por eso, cuando la pregunta es sobre tus números
@@ -2164,6 +2344,7 @@ function show(v){
   el.style.zIndex = String(++zTop); el.hidden=false; el.scrollTop=0;
   if (v==="ajustes" && window.__accPager) requestAnimationFrame(()=>{ window.__accPager.refresh(); window.__accPager.go(window.__accPager.cur,false); });
   document.body.classList.add("locked");
+  if (v==="porpagar") renderPorPagar();
 }
 function closeTop(){
   const v = sheetStack.pop(); if (v){ const el=$(`section[data-view="${v}"]`); if (el) el.hidden=true; }
@@ -2280,7 +2461,7 @@ function bind(){
   window.__drawerOpen = () => drawer.classList.contains("open");
   window.__closeDrawer = closeDrawer;
   $("#menuBtn").addEventListener("click", openDrawer);
-  document.addEventListener("click", e=>{ if (e.target.closest("[data-pagar]")){ e.preventDefault(); openPago(); } });
+  bindPlan(); bindPorPagar();
   $("#updGo").addEventListener("click", ()=>{ const b=AB(); if (!b || !b.updateInstall) return; $("#updGo").disabled=true; $("#updGo").lastChild.textContent="Descargando…"; $("#updBarWrap").hidden=false; $("#updBar").style.width="2%"; b.updateInstall(); });
   $("#updLater").addEventListener("click", ()=>{ $("#updCard").hidden=true; window.__updForce=false; if (updInfo){ try{ localStorage.setItem(LS_KEY+"-updskip", String(updInfo.code)); }catch{} } });
   $("#updCheckBtn").addEventListener("click", ()=>{ closeDrawer(); window.__updForce=true; toast("Buscando actualización…"); maybeUpdateCheck(true); });
@@ -2462,7 +2643,7 @@ function bind(){
 function importItems(items, coId){
   coId = coId || S.active;
   const months = dataOf(coId).months;
-  const touched=new Set(); let added=0, dup=0;
+  const touched=new Set(); let added=0, dup=0; const nuevos=[];
   for (const m of items){
     const k=m.fecha.slice(0,7); const arr=(months[k] ||= []);
     const key = `${m.kind}|${m.code}|${m.folio}|${m.rut}`;
@@ -2474,12 +2655,107 @@ function importItems(items, coId){
       continue;
     }
     if (m.doc==="factura"){ const j = arr.findIndex(x=>x.fijo && x.doc==="factura" && x.kind===m.kind && near(m.total,x.total)); if (j>=0) arr.splice(j,1); }
-    arr.push(m); touched.add(k); added++;
+    arr.push(m); touched.add(k); added++; nuevos.push(m);
   }
   for (const k of touched) store.saveMonth(k, coId);
+  try{ ppAdd(coId, nuevos.filter(m=>m.origen==="sii"), "registro"); }catch{}
   const ks=[...touched].sort(); if (ks.length && coId===S.active && !bgMode) S.month=ks[ks.length-1];
   render();
   return {added, dup};
+}
+
+// ---------- Facturas por pagar ----------
+// Cada factura de compra nueva que llega del SII (arriendo, proveedores…) queda "por pagar"
+// hasta que la marcas como pagada. Al sincronizar, la app avisa con el N° de factura y el monto.
+const ppKey = m => `${String(m.folio||"").trim()}|${cleanRut(m.rut||"")}`;
+const esFacturaPagable = m => m.kind==="compra" && !!String(m.folio||"").trim() && !/^R\d/.test(m.folio) && (m.code ? (m.code==="33"||m.code==="34") : (m.doc==="factura"||m.doc==="exenta"));
+let ppNuevas = [];
+function ppAdd(coId, items, desde){
+  const e = dataOf(coId).empresa, P = (e.porPagar ||= {}), nuevas = [];
+  const lim = ymd(new Date(today.getFullYear(), today.getMonth(), today.getDate()-45));
+  for (const m of items){
+    if (!esFacturaPagable(m) || (m.fecha||"") < lim) continue;
+    const k = ppKey(m), old = P[k];
+    if (old){ if (old.desde==="pendiente" && desde==="registro"){ old.desde="registro"; old.code = m.code||old.code; } continue; }
+    P[k] = {k, folio:String(m.folio).trim(), rut:m.rut||"", who:m.who||"", fecha:m.fecha, code:m.code||"", doc:m.doc, neto:m.neto||0, iva:m.iva||0, exento:m.exento||0, total:m.total||0, desde, estado:"pendiente", llego:new Date().toISOString(), visto:false};
+    nuevas.push({...P[k], coId});
+  }
+  if (nuevas.length || items.length) store.saveEmpresa(coId);
+  if (nuevas.length){ ppNuevas.push(...nuevas); clearTimeout(ppAdd._t); ppAdd._t = setTimeout(avisarFacturas, 2500); }
+  return nuevas;
+}
+const ppNombreDoc = p => p.code==="34"||p.doc==="exenta" ? "Factura exenta" : "Factura";
+function avisarFacturas(){
+  const L2 = ppNuevas.splice(0); if (!L2.length) return;
+  const uno = L2[0];
+  const title = L2.length===1 ? "Te llegó una factura por pagar" : `Te llegaron ${L2.length} facturas por pagar`;
+  const text = L2.length===1
+    ? `${ppNombreDoc(uno)} N° ${uno.folio}${uno.who?` de ${uno.who}`:""} por ${clp(uno.total)} (emitida el ${uno.fecha.split("-").reverse().join("-")}). Toca para ver el detalle.`
+    : L2.slice(0,3).map(p=>`N° ${p.folio}${p.who?` · ${p.who}`:""} · ${clp(p.total)}`).join("\n") + (L2.length>3?`\ny ${L2.length-3} más`:"");
+  const b = AB();
+  if (b && typeof b.avisar==="function"){ try{ b.avisar(title, text); }catch{} }
+  renderPorPagar(); renderUpcoming();
+}
+function ppLista(coId){ const P = dataOf(coId||S.active).empresa.porPagar||{}; return Object.values(P).sort((a,b)=>(b.fecha||"").localeCompare(a.fecha||"")); }
+function ppPendientes(coId){ return ppLista(coId).filter(p=>p.estado==="pendiente"); }
+function ppLinea(t, v, strong){ return `<div class="spread small"><span class="muted">${esc(t)}</span><span${strong?' style="font-weight:800"':""}>${esc(v)}</span></div>`; }
+function ppCard(p){
+  const pag = p.estado==="pagada";
+  return `<div class="panel ppcard" data-ppk="${esc(p.k)}">
+    <div class="spread"><b>${esc(ppNombreDoc(p))} N° ${esc(p.folio)}</b>${pag?`<span class="pill good">Pagada</span>`:`<span class="pill warn">Por pagar</span>`}</div>
+    <div style="display:grid;gap:4px">
+      ${ppLinea("Proveedor", p.who||"—")}${p.rut?ppLinea("RUT", p.rut):""}${ppLinea("Fecha de emisión", p.fecha.split("-").reverse().join("-"))}
+      ${p.neto?ppLinea("Neto", clp(p.neto)):""}${p.iva?ppLinea("IVA", clp(p.iva)):""}${p.exento?ppLinea("Exento", clp(p.exento)):""}${ppLinea("Total a pagar", clp(p.total), true)}
+      ${pag&&p.pagadaEl?ppLinea("Pagada el", p.pagadaEl.split("-").reverse().join("-")):""}
+    </div>
+    ${p.desde==="pendiente"&&!pag?`<p class="small muted" style="margin:0">Todavía está por aceptar en el SII: si está bien, se acepta sola a los 8 días.</p>`:""}
+    <div class="row">${pag?`<button class="btn sm" type="button" data-ppundo>Marcar como no pagada</button>`:`<button class="btn primary sm" type="button" data-pppay>${icon("check")}Ya la pagué</button><button class="btn sm" type="button" data-ppcopy>${icon("copy")}Copiar datos</button>`}</div>
+  </div>`;
+}
+function renderPorPagar(){
+  const box = $("#ppList"); if (!box) return;
+  const L2 = ppLista(), pend = L2.filter(p=>p.estado==="pendiente"), pag = L2.filter(p=>p.estado==="pagada").slice(0,15);
+  const total = pend.reduce((a,p)=>a+(p.total||0),0);
+  box.innerHTML = (pend.length ? `<div class="panel"><div class="spread"><b>${pend.length} factura${pend.length>1?"s":""} por pagar</b><b>${clp(total)}</b></div><p class="small muted" style="margin:0">Paga con transferencia desde tu banco y después toca "Ya la pagué". La app nunca paga por ti.</p></div>` + pend.map(ppCard).join("")
+    : `<div class="panel"><b>No tienes facturas por pagar</b><p class="small muted" style="margin:0">Cuando sincronices con el SII y te llegue una factura de compra (arriendo, proveedores, servicios), aparecerá aquí con su número y monto, y te avisaremos.</p></div>`)
+    + ppRecientesHTML()
+    + (pag.length ? `<h3 class="ht" style="margin:6px 0 0">Pagadas</h3>` + pag.map(ppCard).join("") : "");
+  hydrateIcons(box);
+  // marca como vistas las que se mostraron
+  const P = S.empresa.porPagar||{}; let cambio=false;
+  if (!$('section.sheet[data-view="porpagar"]').hidden) for (const p of pend) if (!P[p.k].visto){ P[p.k].visto=true; cambio=true; }
+  if (cambio){ store.saveEmpresa(); renderUpcoming(); }
+  const bn = $("#ppBanner");
+  if (bn){ const nv = pend.filter(p=>!p.visto); bn.hidden = !nv.length; if (nv.length){ $("#ppBTitle").textContent = nv.length===1 ? `Llegó la factura N° ${nv[0].folio} por pagar` : `Llegaron ${nv.length} facturas por pagar`; $("#ppBSub").textContent = nv.length===1 ? `${nv[0].who||"Proveedor"} · ${clp(nv[0].total)}` : nv.slice(0,2).map(p=>`N° ${p.folio} · ${clp(p.total)}`).join(" · "); } }
+}
+// Facturas de compra de los últimos 45 días que ya estaban en la app: puedes sumarlas a "por pagar".
+function ppRecientes(){
+  const P = S.empresa.porPagar||{}, lim = ymd(new Date(today.getFullYear(), today.getMonth(), today.getDate()-45)), out=[];
+  for (const k of Object.keys(S.months)) for (const m of S.months[k]||[]) if (esFacturaPagable(m) && m.fecha>=lim && !P[ppKey(m)]) out.push(m);
+  return out.sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,10);
+}
+function ppRecientesHTML(){
+  const r = ppRecientes(); if (!r.length) return "";
+  return `<div class="panel"><b>¿Alguna de estas te falta pagar?</b><p class="small muted" style="margin:0">Facturas de compra recientes que ya estaban en la app. Agrégala y te la recordamos hasta que la pagues.</p>
+    ${r.map(m=>`<div class="spread" style="gap:10px"><span style="min-width:0"><b class="small" style="display:block">N° ${esc(m.folio)} · ${clp(m.total)}</b><span class="small muted" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(m.who||"Proveedor")} · ${esc(m.fecha.split("-").reverse().join("-"))}</span></span><button class="btn sm" type="button" data-ppadd="${esc(m.id)}">Agregar</button></div>`).join("")}</div>`;
+}
+function ppCopiar(p){
+  const t = `Pago ${ppNombreDoc(p)} N° ${p.folio}\nProveedor: ${p.who||""}\nRUT: ${p.rut||""}\nMonto: ${clp(p.total)}`;
+  const ok = () => toast("Datos copiados: pégalos en la transferencia");
+  try{ navigator.clipboard.writeText(t).then(ok, ()=>{ fallback(); }); }catch{ fallback(); }
+  function fallback(){ try{ const ta=document.createElement("textarea"); ta.value=t; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); ok(); }catch{ const b=AB(); if (b && b.share) b.share(t); } }
+}
+function bindPorPagar(){
+  document.addEventListener("click", e=>{
+    const a = e.target.closest("[data-ppadd]");
+    if (a){ const m = Object.values(S.months).flat().find(x=>x.id===a.dataset.ppadd); if (m){ const P=(S.empresa.porPagar ||= {}); const k=ppKey(m); P[k]={k, folio:String(m.folio).trim(), rut:m.rut||"", who:m.who||"", fecha:m.fecha, code:m.code||"", doc:m.doc, neto:m.neto||0, iva:m.iva||0, exento:m.exento||0, total:m.total||0, desde:"registro", estado:"pendiente", llego:new Date().toISOString(), visto:true}; store.saveEmpresa(); renderPorPagar(); renderUpcoming(); toast(`Factura N° ${m.folio} agregada a por pagar`); } return; }
+    const t = e.target.closest("[data-pppay],[data-ppundo],[data-ppcopy]"); if (!t) return;
+    const card = t.closest("[data-ppk]"); const P = S.empresa.porPagar||{}; const p = card && P[card.dataset.ppk]; if (!p) return;
+    if (t.hasAttribute("data-ppcopy")){ ppCopiar(p); return; }
+    if (t.hasAttribute("data-pppay")){ p.estado="pagada"; p.pagadaEl=ymd(new Date()); p.visto=true; toast(`Factura N° ${p.folio} marcada como pagada`); }
+    else { p.estado="pendiente"; delete p.pagadaEl; }
+    store.saveEmpresa(); renderPorPagar(); renderUpcoming();
+  });
 }
 
 // ---------- Funciones de la APK (Android) ----------
@@ -2495,6 +2771,14 @@ window.onSiiCompany = (rut, nombre) => { const co = ensureCompany(rut, String(no
 window.onSiiPending = (rut, n) => { const co = ensureCompany(rut, ""); if (co){ co.pend = Number(n)||0; co.pendAt = new Date().toISOString(); store.saveCompanies(); render(); } return "ok"; };
 window.onSiiCsv = (text, rut) => {
   try{
+    if (/^CB_PEND\r?\n/.test(String(text||""))){   // detalle de facturas pendientes (por aceptar) del SII
+      const rows = parseCSV(String(text).replace(/^CB_PEND\r?\n/,""));
+      if (rows.length < 2) return "vacio";
+      const res = mapSII(rows, "compra");
+      const co = rut ? ensureCompany(rut, "") : activeCo();
+      ppAdd(co.id, res.items, "pendiente"); render();
+      return "ok";
+    }
     const rows = parseCSV(String(text||""));
     if (rows.length < 2) { if (!bgMode) toast("El archivo del SII venía vacío."); return "vacio"; }
     const res = mapSII(rows, "auto");
