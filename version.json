@@ -1,7 +1,7 @@
 {
-  "code": 30,
-  "name": "9.2",
+  "code": 31,
+  "name": "9.3",
   "apk": "contador-de-bolsillo.apk",
   "mb": 0.1,
-  "notas": "• La suscripción muestra su valor: $4.990 al mes, después de 30 días de prueba gratis."
+  "notas": "• Facturas por pagar: cuando sincronizas y te llega una factura de compra (por ejemplo el arriendo), la app te avisa con su número, proveedor y monto.\n• Planes nuevos: mensual $3.990, 3 meses (-5%), 6 meses (-10%) y anual (-15%), con Mercado Pago y activación automática."
 }
