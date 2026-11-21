@@ -1,7 +1,7 @@
 {
-  "code": 32,
-  "name": "9.4",
+  "code": 33,
+  "name": "9.5",
   "apk": "contador-de-bolsillo.apk",
-  "mb": 0.1,
-  "notas": "• Actualizaciones automáticas: al abrir la app se descarga e instala sola la versión nueva.\n• Facturas por pagar: te avisa cuando llega una factura de compra (por ejemplo el arriendo) con su número, proveedor y monto.\n• Planes: mensual $3.990, 3 meses (-5%), 6 meses (-10%) y anual (-15%), con Mercado Pago."
+  "mb": 0.2,
+  "notas": "• Guía de uso: la primera vez que abres la app te muestra para qué sirve cada parte (puedes repetirla en Ayuda).\n• Actualizaciones en segundo plano: la app busca versiones nuevas cada 4 horas aunque esté cerrada y te muestra las novedades.\n• Facturas por pagar y planes con descuento."
 }

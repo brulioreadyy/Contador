@@ -389,6 +389,15 @@ section.sheet>*{max-width:720px;margin-inline:auto}
 .upd.plan{background:var(--surface);border-color:var(--line)}
 .upd.plan .av{background:var(--copper-soft);color:var(--copper)}
 .ppcard{display:grid;gap:10px}
+.guia{position:fixed;inset:0;z-index:9500}
+.guia[hidden]{display:none}
+.guia.centro{background:rgba(0,0,0,.62)}
+.guia-hole{position:fixed;border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.62);outline:2px solid var(--accent);transition:all .25s ease;pointer-events:none}
+.guia-card{position:fixed;left:16px;right:16px;max-width:440px;margin:0 auto;background:var(--surface);color:var(--ink);border-radius:18px;padding:16px;display:grid;gap:6px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.guia.centro .guia-card{top:50%;transform:translateY(-50%)}
+.guia-card b{font-family:var(--f-display);font-size:1.1rem}
+.guia-card p{margin:0;color:var(--muted);line-height:1.45}
+.guia-row{display:flex;gap:8px;align-items:center;margin-top:6px}
 /* Planes de suscripción: mismo diseño que Silla y Mimo */
 .plantop{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .plantop b{font-family:var(--f-display);font-size:1.2rem}
@@ -461,6 +470,10 @@ section.sheet>*{max-width:720px;margin-inline:auto}
   <div class="upd plan" id="planBanner" hidden>
     <div class="upd-top"><span class="av"><i class="ic" data-i="star"></i></span><div style="min-width:0;flex:1"><b id="planBTitle">Prueba gratis</b><small id="planBSub"></small></div></div>
     <div class="row"><button class="btn primary sm" type="button" data-pagar><i class="ic" data-i="card"></i>Suscribirme</button></div>
+  </div>
+  <div class="upd plan" id="novCard" hidden>
+    <div class="upd-top"><span class="av"><i class="ic" data-i="sparkles"></i></span><div style="min-width:0;flex:1"><b id="novT">Novedades</b><small>La app se actualizó sola. Tus datos siguen igual.</small></div><button class="iconbtn" type="button" aria-label="Cerrar novedades" style="width:34px;height:34px" onclick="this.closest('#novCard').hidden=true"><i class="ic" data-i="x"></i></button></div>
+    <p class="small" id="novNotes" style="white-space:pre-line;margin:0"></p>
   </div>
   <div class="upd plan" id="ppBanner" hidden>
     <div class="upd-top"><span class="av"><i class="ic" data-i="card"></i></span><div style="min-width:0;flex:1"><b id="ppBTitle">Factura por pagar</b><small id="ppBSub"></small></div></div>
@@ -954,7 +967,7 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     <div class="panel" style="margin-top:14px;gap:8px">
       <h3 class="ht"><i class="ic" data-i="help"></i>¿No encontraste tu respuesta?</h3>
       <p class="small muted" style="margin:0">Pregúntale al asistente, o llama a la Mesa de Ayuda del SII: <b>22 395 1000</b>. Para trámites del Estado: ChileAtiende <b>101</b>.</p>
-      <div class="row"><button class="btn sm" type="button" data-hgo="ia"><i class="ic" data-i="sparkles"></i>Preguntar al asistente</button></div>
+      <div class="row"><button class="btn sm" type="button" data-hgo="ia"><i class="ic" data-i="sparkles"></i>Preguntar al asistente</button><button class="btn sm" type="button" data-guia><i class="ic" data-i="help"></i>Ver guía de uso</button></div>
     </div>
   </div>
   <div id="htSeg" hidden>
@@ -1012,7 +1025,7 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     <button type="button" data-dhelp="seg"><i class="ic" data-i="shield"></i>Política de seguridad</button>
     <button type="button" data-dgo="legal"><i class="ic" data-i="receipt"></i>Términos y privacidad</button>
   </nav>
-  <p class="small muted dver"><span id="verTxt">Contador de Bolsillo · versión 9.4</span><br><button type="button" id="updCheckBtn" class="apk-only" hidden>Buscar actualización</button></p>
+  <p class="small muted dver"><span id="verTxt">Contador de Bolsillo · versión 9.5</span><br><button type="button" id="updCheckBtn" class="apk-only" hidden>Buscar actualización</button></p>
 </aside>
 <div id="movSheet" class="welcome" hidden style="place-items:end center;background:color-mix(in srgb,var(--ink) 40%,transparent)">
   <div class="panel" style="width:100%;max-width:520px;box-shadow:var(--shadow)">
@@ -1091,6 +1104,11 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     </label>
     <div style="display:grid;gap:10px"><button class="btn primary" type="submit">Continuar</button><button class="btn" id="wSkip" type="button">Omitir</button></div>
   </form>
+</div>
+<div id="guia" class="guia" hidden role="dialog" aria-modal="true" aria-labelledby="guiaT">
+  <div class="guia-hole" id="guiaHole"></div>
+  <div class="guia-card" id="guiaCard"><small class="muted" id="guiaN"></small><b id="guiaT"></b><p id="guiaD"></p>
+    <div class="guia-row"><button class="btn sm ghost" type="button" id="guiaSkip">Saltar guía</button><span style="flex:1"></span><button class="btn sm" type="button" id="guiaPrev">Atrás</button><button class="btn sm primary" type="button" id="guiaNext">Siguiente</button></div></div>
 </div>
 <div class="toast" id="toast" hidden></div>
 <script>
@@ -2212,8 +2230,10 @@ function bindPlan(){
   document.addEventListener("visibilitychange", ()=>{ if (document.visibilityState==="visible" && L.pagoPend && Date.now()-L.pagoPend < 2*3600e3 && plan().estado!=="pagado") sondearPago(); });
   revisarRetornoPago();
   // Igual que Silla y Mimo: al empezar pide tus datos una vez para activar la prueba gratis
-  setTimeout(()=>{ let w=""; try{ w=localStorage.getItem(LS_KEY+"-welcome")||""; }catch{}
-    if (!registrado() && !L.pidio && w && $("#welcome").hidden && !sheetStack.length && !bgMode){ L.pidio=1; saveL(); openPlan(); } }, 4000);
+  window.__pedirPlan = () => { let w=""; try{ w=localStorage.getItem(LS_KEY+"-welcome")||""; }catch{}
+    if (!registrado() && !L.pidio && w && $("#welcome").hidden && !sheetStack.length && !bgMode && !window.__guiaOn){ L.pidio=1; saveL(); openPlan(); } };
+  // Primera vez: guía de uso y después los datos para la prueba gratis
+  setTimeout(()=>{ if (window.__guia) window.__guia(); if (!window.__guiaOn) window.__pedirPlan(); }, 2500);
   // Revisa el plan al abrir (máximo cada 6 horas)
   if (registrado() && (!L.revisado || Date.now()-L.revisado > 6*3600e3)) setTimeout(()=>verificar(false), 2500);
 }
@@ -2461,7 +2481,7 @@ function bind(){
   window.__drawerOpen = () => drawer.classList.contains("open");
   window.__closeDrawer = closeDrawer;
   $("#menuBtn").addEventListener("click", openDrawer);
-  bindPlan(); bindPorPagar();
+  bindPlan(); bindPorPagar(); bindGuia();
   $("#updGo").addEventListener("click", ()=>{ const b=AB(); if (!b || !b.updateInstall) return; $("#updGo").disabled=true; $("#updGo").lastChild.textContent="Descargando…"; $("#updBarWrap").hidden=false; $("#updBar").style.width="2%"; b.updateInstall(); });
   $("#updLater").addEventListener("click", ()=>{ $("#updCard").hidden=true; window.__updForce=false; updSesionOculta=true; });
   $("#updCheckBtn").addEventListener("click", ()=>{ closeDrawer(); window.__updForce=true; toast("Buscando actualización…"); maybeUpdateCheck(true); });
@@ -2664,6 +2684,68 @@ function importItems(items, coId){
   return {added, dup};
 }
 
+// ---------- Guía de uso para personas nuevas ----------
+// Recorre la pantalla real: ilumina cada parte y explica para qué sirve. Se muestra una vez y se puede repetir desde Ayuda.
+const GUIA = [
+  {t:"¡Bienvenido! Te mostramos la app", d:"En menos de un minuto ves para qué sirve cada parte. Puedes saltarla cuando quieras."},
+  {s:"#helpBtn", t:"Ayuda y seguridad", d:"Toca el logo para abrir el Centro de ayuda con las preguntas más comunes y la política de seguridad. Ahí también puedes repetir esta guía."},
+  {s:"#bizBtn", t:"Tu empresa", d:"Aquí ves tu pyme. Si tienes más de una empresa en el SII, tócala para cambiar entre ellas."},
+  {s:"#dockBell", t:"Recordatorios", d:"Activa avisos del F29, la renta, la patente y las facturas que te llegan por pagar."},
+  {s:"#menuBtn", t:"Menú", d:"Todo lo demás: facturas por pagar, renta anual, patente, calendario, trámites, tu plan y tu cuenta del SII."},
+  {s:".monthchip", t:"Mes que estás viendo", d:"Usa las flechas para ver meses anteriores."},
+  {s:"#dockSync", t:"Conectar con el SII", d:"Trae tus compras y ventas del SII. Si lo activas, se sincroniza sola en segundo plano y te avisa cuando llega una factura por pagar."},
+  {s:".hero", t:"Impuestos del mes", d:"Lo que pagarías en el F29 y cuándo vence. Tócalo para ver el detalle y cómo pagarlo en sii.cl. La app nunca paga por ti."},
+  {s:"#monthStats", t:"Ingresos y gastos", d:"El resumen de tus ventas y compras del mes."},
+  {s:"#upcoming", t:"Ya viene", d:"Vencimientos, facturas por pagar o por aceptar, renta y patente, en orden. Toca cualquiera para ver qué hacer."},
+  {s:".tab-add", t:"Agregar un movimiento", d:"Anota una venta, compra o gasto a mano, o sácale foto a una boleta o factura."},
+  {s:'#ptabs .tab[data-p="1"]', t:"Movimientos", d:"Todas tus ventas y compras del mes, con buscador."},
+  {s:'#ptabs .tab[data-p="2"]', t:"Renta", d:"Cómo va tu renta anual, la que se declara en abril."},
+  {s:'#ptabs [data-go="ia"]', t:"Asistente", d:"Pregúntale en simple, por ejemplo \"¿cuánto pago este mes?\", y te responde con tus números."},
+  {t:"¡Listo!", d:"Ya sabes usar Contador de Bolsillo. Para volver a ver esta guía, toca el logo → Ayuda → Ver guía de uso."}
+];
+let guiaI = 0, guiaPasos = [];
+const guiaVisible = el => !!(el && el.getClientRects().length && !el.closest("[hidden]"));
+function guiaPintar(){
+  const g = $("#guia"), p = guiaPasos[guiaI], el = p.s ? $(p.s) : null;
+  const hole = $("#guiaHole"), card = $("#guiaCard");
+  $("#guiaT").textContent = p.t; $("#guiaD").textContent = p.d;
+  $("#guiaN").textContent = `${guiaI+1} de ${guiaPasos.length}`;
+  $("#guiaPrev").hidden = guiaI===0; $("#guiaNext").textContent = guiaI===guiaPasos.length-1 ? "Empezar" : "Siguiente";
+  $("#guiaSkip").hidden = guiaI===guiaPasos.length-1;
+  if (!el){ hole.hidden = true; g.classList.add("centro"); card.style.top=""; card.style.bottom=""; return; }
+  g.classList.remove("centro");
+  el.scrollIntoView({block:"center", behavior:"instant"});
+  requestAnimationFrame(()=>{
+    const r = el.getBoundingClientRect(), pad = 6;
+    hole.hidden = false;
+    Object.assign(hole.style, {left:(r.left-pad)+"px", top:(r.top-pad)+"px", width:(r.width+pad*2)+"px", height:(r.height+pad*2)+"px"});
+    const abajo = r.top + r.height/2 < innerHeight/2;
+    card.style.top = abajo ? Math.min(innerHeight-200, r.bottom+pad+12)+"px" : "";
+    card.style.bottom = abajo ? "" : Math.max(12, innerHeight-r.top+pad+12)+"px";
+  });
+}
+function abrirGuia(){
+  if (window.__helpOpen && window.__helpOpen()) window.__closeHelp();
+  if (window.__drawerOpen && window.__drawerOpen()) window.__closeDrawer();
+  show("resumen"); if (window.__goPage) window.__goPage(0,false);
+  guiaPasos = GUIA.filter(p=>!p.s || guiaVisible($(p.s)));
+  guiaI = 0; window.__guiaOn = true; $("#guia").hidden = false; guiaPintar();
+}
+function cerrarGuia(){
+  $("#guia").hidden = true; window.__guiaOn = false;
+  try{ localStorage.setItem(LS_KEY+"-guia","1"); }catch{}
+  window.scrollTo({top:0});
+  if (window.__pedirPlan) setTimeout(window.__pedirPlan, 800);
+}
+function bindGuia(){
+  $("#guiaNext").addEventListener("click", ()=>{ if (guiaI < guiaPasos.length-1){ guiaI++; guiaPintar(); } else cerrarGuia(); });
+  $("#guiaPrev").addEventListener("click", ()=>{ if (guiaI>0){ guiaI--; guiaPintar(); } });
+  $("#guiaSkip").addEventListener("click", cerrarGuia);
+  addEventListener("resize", ()=>{ if (!$("#guia").hidden) guiaPintar(); });
+  document.addEventListener("click", e=>{ if (e.target.closest("[data-guia]")){ e.preventDefault(); abrirGuia(); } });
+  window.__guia = () => { let v=""; try{ v=localStorage.getItem(LS_KEY+"-guia")||""; }catch{} if (!v && $("#welcome").hidden) abrirGuia(); };
+}
+
 // ---------- Facturas por pagar ----------
 // Cada factura de compra nueva que llega del SII (arriendo, proveedores…) queda "por pagar"
 // hasta que la marcas como pagada. Al sincronizar, la app avisa con el N° de factura y el monto.
@@ -2847,6 +2929,18 @@ function maybeBgSync(force){
   b.bgSync(); return true;
 }
 window.__appResumed = () => { maybeBgSync(); maybeUpdateCheck(); };
+// Mientras la app está abierta también busca actualizaciones cada 30 minutos (cerrada, lo hace Android cada 4 horas).
+setInterval(()=>{ if (document.visibilityState==="visible") maybeUpdateCheck(); }, 30*60000);
+// Después de actualizar: muestra qué trae la versión nueva.
+function mostrarNovedades(forzar){
+  const b=AB(); if (!b || typeof b.updNotes!=="function") return;
+  let n={}; try{ n=JSON.parse(b.updNotes()||"{}"); }catch{}
+  const v = b.appVersion ? b.appVersion() : "";
+  let visto=""; try{ visto=localStorage.getItem(LS_KEY+"-vervista")||""; }catch{}
+  try{ localStorage.setItem(LS_KEY+"-vervista", v); }catch{}
+  if (!n.notas || n.name!==v || (!forzar && visto===v)) return;
+  $("#novT").textContent = `Novedades de la versión ${v}`; $("#novNotes").textContent = n.notas; $("#novCard").hidden=false; hydrateIcons($("#novCard"));
+}
 window.__bgSync = (state, n) => {
   if (state==="start" || state==="startYear"){ syncing=true; bgMode=true; bgYear = state==="startYear"; bgNew=0; bgProg = bgYear ? {start:Date.now(), done:0, total:0} : null; renderDock(); return; }
   const wasYear = bgYear; syncing=false; bgMode=false; bgYear=false; bgProg=null;
@@ -2935,7 +3029,7 @@ async function start(){
   setTimeout(()=>{ const sp=$("#splash"); if (sp){ sp.classList.add("out"); setTimeout(()=>sp.remove(), 400); } }, 1000);
   fillDocs(); $("#fFecha").value=ymd(today); updatePreview(); bind(); bindApk();
   let seen=false; try{ seen = localStorage.getItem(LS_KEY+"-welcome")==="1"; }catch{}
-  const closeW = () => { $("#welcome").hidden=true; try{ localStorage.setItem(LS_KEY+"-welcome","1"); }catch{} };
+  const closeW = () => { $("#welcome").hidden=true; try{ localStorage.setItem(LS_KEY+"-welcome","1"); }catch{} setTimeout(()=>{ if (window.__guia) window.__guia(); }, 700); };
   $("#cRubro").innerHTML = `<option value="">Elige tu rubro</option>` + Object.entries(RUBROS).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join("");
   $("#oRubro").innerHTML = $("#cRubro").innerHTML;
   const TOUR = [
@@ -3036,7 +3130,7 @@ async function start(){
   // Sincronización automática (APK): una vez al día si la persona la activó.
   try{
     const b=AB();
-    setTimeout(()=>maybeUpdateCheck(), 2500);
+    setTimeout(()=>maybeUpdateCheck(), 2500); setTimeout(()=>mostrarNovedades(false), 1200);
     if (b && typeof b.bgSync==="function") setTimeout(()=>maybeBgSync(), 1500);
     else if (b && b.autoSyncOn && b.autoSyncOn() && b.hasSiiCreds()){
       let last=""; try{ last=localStorage.getItem(LS_KEY+"-lastsync")||""; }catch{}
