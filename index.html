@@ -1012,7 +1012,7 @@ section.sheet>*{max-width:720px;margin-inline:auto}
     <button type="button" data-dhelp="seg"><i class="ic" data-i="shield"></i>Política de seguridad</button>
     <button type="button" data-dgo="legal"><i class="ic" data-i="receipt"></i>Términos y privacidad</button>
   </nav>
-  <p class="small muted dver"><span id="verTxt">Contador de Bolsillo · versión 9.2</span><br><button type="button" id="updCheckBtn" class="apk-only" hidden>Buscar actualización</button></p>
+  <p class="small muted dver"><span id="verTxt">Contador de Bolsillo · versión 9.4</span><br><button type="button" id="updCheckBtn" class="apk-only" hidden>Buscar actualización</button></p>
 </aside>
 <div id="movSheet" class="welcome" hidden style="place-items:end center;background:color-mix(in srgb,var(--ink) 40%,transparent)">
   <div class="panel" style="width:100%;max-width:520px;box-shadow:var(--shadow)">
@@ -2463,7 +2463,7 @@ function bind(){
   $("#menuBtn").addEventListener("click", openDrawer);
   bindPlan(); bindPorPagar();
   $("#updGo").addEventListener("click", ()=>{ const b=AB(); if (!b || !b.updateInstall) return; $("#updGo").disabled=true; $("#updGo").lastChild.textContent="Descargando…"; $("#updBarWrap").hidden=false; $("#updBar").style.width="2%"; b.updateInstall(); });
-  $("#updLater").addEventListener("click", ()=>{ $("#updCard").hidden=true; window.__updForce=false; if (updInfo){ try{ localStorage.setItem(LS_KEY+"-updskip", String(updInfo.code)); }catch{} } });
+  $("#updLater").addEventListener("click", ()=>{ $("#updCard").hidden=true; window.__updForce=false; updSesionOculta=true; });
   $("#updCheckBtn").addEventListener("click", ()=>{ closeDrawer(); window.__updForce=true; toast("Buscando actualización…"); maybeUpdateCheck(true); });
   try{ const b=AB(); const v=b && b.appVersion ? b.appVersion() : ""; if (v) $("#verTxt").textContent=`Contador de Bolsillo · versión ${v}`; }catch{}
   // Panel de ayuda y seguridad (logo)
@@ -2801,23 +2801,25 @@ let updInfo = null, updManual = false;
 function maybeUpdateCheck(force){
   const b=AB(); if (!b || typeof b.updateCheck!=="function") return;
   let last=0; try{ last=Number(localStorage.getItem(LS_KEY+"-updtry"))||0; }catch{}
-  if (!force && Date.now()-last < 3*3600000) return;
+  if (!force && Date.now()-last < 60000) return;   // revisa cada vez que abres la app (máximo 1 vez por minuto)
   try{ localStorage.setItem(LS_KEY+"-updtry", String(Date.now())); }catch{}
   updManual = !!force; b.updateCheck();
 }
 window.__update = info => {
   if (!info || !info.hay){ if (updManual) toast("Ya tienes la última versión"); updManual=false; return; }
   updManual=false; updInfo=info;
-  let skip=""; try{ skip=localStorage.getItem(LS_KEY+"-updskip")||""; }catch{}
-  if (skip===String(info.code) && $("#updCard").hidden && !window.__updForce) return;
+  if (updSesionOculta && !window.__updForce) return;
   $("#updTitle").textContent = `Versión ${info.name||""} disponible`.replace("  "," ");
   $("#updSub").textContent = `${info.mb ? info.mb.toLocaleString("es-CL")+" MB · " : ""}tus datos se mantienen`;
   $("#updNotes").textContent = info.notas||""; $("#updNotes").hidden = !info.notas;
   $("#updGo").disabled=false; $("#updGo").lastChild.textContent="Actualizar ahora"; $("#updBarWrap").hidden=true;
   $("#updCard").hidden=false; hydrateIcons($("#updCard"));
+  // Automática: se descarga e instala sola (Android 12 o más nuevo no pregunta nada desde la segunda vez)
+  if (!updEnCurso){ updEnCurso=true; $("#updGo").disabled=true; $("#updGo").lastChild.textContent="Actualizando…"; try{ AB().updateInstall(); }catch{ updEnCurso=false; } }
 };
+let updEnCurso = false, updSesionOculta = false;
 window.__updateProgress = pct => { $("#updBarWrap").hidden=false; $("#updBar").style.width=pct+"%"; $("#updGo").lastChild.textContent=`Descargando ${pct}%`; };
-window.__updateResult = st => {
+window.__updateResult = st => { updEnCurso=false;
   $("#updGo").disabled=false; $("#updBarWrap").hidden=true; $("#updGo").lastChild.textContent="Actualizar ahora";
   if (st==="confirmar") toast("Descarga lista. Toca Actualizar en el aviso de Android.");
   else if (st==="cancelado") toast("Actualización cancelada. Puedes hacerla después.");
