@@ -1,7 +1,7 @@
 {
-  "code": 38,
-  "name": "10.0",
+  "code": 39,
+  "name": "10.1",
   "apk": "contador-de-bolsillo.apk",
   "mb": 0.2,
-  "notas": "• Comparar con el SII: abre tu Registro de Compras y Ventas para revisarlo con calma, con los números de la app arriba para comparar.\n• Botón grande en el inicio para pagar el F29 y facturas por revisar más exactas."
+  "notas": "• Facturas por pagar: elige \"Ya la transferí\" o \"Pagué al comprar\". Si pagas con tarjeta al comprar, ese proveedor queda marcado y no te pregunta más.\n• Se actualiza sola también con la app cerrada (cada 3 horas, de 8 a 22 h) y te avisa si llegó una factura por pagar.\n• Mis documentos: trae del SII tu e-RUT, carpeta tributaria, certificados y F29; quedan guardados en la app. Además libro de compras y ventas y resumen del F29 en PDF al instante.\n• Mi e-RUT con todos sus datos y el documento oficial del SII.\n• Crear mi empresa desde cero dentro de la app: giro oficial del SII, tus datos para copiar y el Registro de Empresas y el SII abiertos aquí mismo."
 }
